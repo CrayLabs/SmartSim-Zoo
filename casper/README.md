@@ -1,5 +1,7 @@
 # Casper
 
+Contributing user: @jedwards4b
+
 ```bash
 module purge
 module use /glade/p/cesmdata/cseg/PROGS/modulefiles/CrayLabs
