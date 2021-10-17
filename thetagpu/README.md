@@ -1,43 +1,40 @@
 
-# Theta Tutorials
+# ThetaGPU Tutorials
 
-Theta is the supercomputer at the Argonne National Lab. The
-following tutorials are meant to aide users on Theta with getting used to the
+ThetaGPU is a cluster of 24 Nvidia DGX nodes at the Argonne National Lab. The
+following tutorials are meant to aide users on ThetaGPU with getting used to the
 different types of workflows that are possible with SmartSim.
 
 
 ## Prerequisites
 
-On Theta, the launcher is Cobalt. SmartSim can be used to launch applications
-with the `aprun` or `mpirun` commands.
+On ThetaGPU, the launcher is Cobalt. SmartSim can be used to launch applications
+with the `mpirun` command.
 
 The following module commands were utilized to run the examples
 
 ```bash
-module purge
-module load PrgEnv-cray
-module load cray-mpich
-module load craype-network-aries
-module unload atp perftools-base/20.06.0 cray-libsci/20.06.1
 module load conda
 ```
 
 With this environment loaded, users will need to build and install both SmartSim and
 SmartRedis through pip. Users are advised to build on
-compute nodes, but the whole process can be run on any node.
+compute nodes, as the service nodes do not have all needed libraries installed.
 Usually we recommend users installing or loading miniconda and
 using the pip that comes with that installation. 
 
 The following commands were utilized to build SmartSim on Theta,
-after the needed Conda environment was loaded.
+after the correct conda environment was loaded.
 
 ```bash
-export CRAY_CPU_TARGET=x86-64
-export CRAYPE_LINK_TYPE=dynamic
-export CC=$(which cc)
-export CXX=$(which CC)
+export CC=$(which gcc)
+export CXX=$(which g++)
+pip install . tensorflow==2.4.2 numpy==1.19.5 torch==1.7.1 onnx==1.7 
+export CUDNN_LIBRARY_DIR=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/lib
+export CUDNN_LIBRARY=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/lib
+export CUDNN_INCLUDE_DIR=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/include
 conda install swig cmake git-lfs -y
-pip install smartsim[ml]
+pip install smartsim
 smart --device cpu --onnx
 ```
 
@@ -55,13 +52,45 @@ documentation [here](https://www.craylabs.org/docs/installation.html).
 Three of the examples utilize interactive allocations, which is the preferred method of
 launching SmartSim.
 
-All the examples use `aprun` as a launch command. Examples for `mpirun` are available in the Theta GPU directory of this repository.
+When utilizing OpenMPI (as opposed to  `aprun`, as on Theta) to launch the
+Orchestrator database, SmartSim needs to be informed of the nodes the user would like
+the database to be launched on.
+
+This can be automated, and code for the automation of hostname aquisition is included in
+most of the files. This recipe can be followed for launching the Orchestrator with
+OpenMPI on PBS systems.
+
+
+```python
+def collect_db_hosts(num_hosts):
+    """A simple method to collect hostnames because we are using
+       openmpi. (not needed for aprun (ALPS), srun (Slurm), etc.)
+    """
+
+    hosts = []
+    if "COBALT_NODEFILE" in os.environ:
+        node_file = os.environ["COBALT_NODEFILE"]
+        with open(node_file, "r") as f:
+            for line in f.readlines():
+                host = line.strip()
+                hosts.append(host)
+    else:
+        raise Exception("could not parse interactive allocation nodes from COBALT_NODEFILE")
+
+    # account for mpiprocs causing repeats in COBALT_NODEFILE
+    hosts = list(set(hosts))
+
+    if len(hosts) >= num_hosts:
+        return hosts[:num_hosts]
+    else:
+        raise Exception(f"COBALT_NODEFILE had {len(hosts)} hosts, not {num_hosts}")
+```
 
 ----------
 
 ### 1. launch_distributed_model.py
 
-Launch a distributed model with `aprun` through SmartSim. This could represent
+Launch a distributed model with OpenMPI through SmartSim. This could represent
 a simulation or other workload that contains the SmartRedis clients and commuicates
 with the Orchestrator.
 
@@ -79,7 +108,7 @@ with SmartSim and SmartRedis installed.
 Compile the simple hello world MPI program.
 
 ```bash
-cc hello.c -o hello
+gcc hello.c -o hello
 ```
 
 Run the model through SmartSim in the interactive allocation
@@ -120,7 +149,7 @@ allocation.
 
 ```bash
 # fill in account and queue parameters
-qsub -l select=3:ncpus=1 -l walltime=00:20:00 -A <account> -q <queue> -I
+qsub -n 3 -l walltime=00:20:00 -A <account> -q <queue> -I
 ```
 After obtaining the allocation, make sure to module load your conda or python environment
 with SmartSim and SmartRedis installed.
@@ -150,7 +179,8 @@ producer to run on a seperate node.
 qsub -n 3 -l walltime=00:20:00 -A <account> -q <queue> -I
 ```
 After obtaining the allocation, make sure to module load your conda or python environment
-with SmartSim and SmartRedis installed.
+with SmartSim and SmartRedis installed, as well as module load OpenMPI and gcc 8.3 as
+specified at the top of this README.
 
 run the workflow with
 
@@ -171,7 +201,7 @@ with the batch system to create pipelines, dependants, and conditions.
 
 In this case, we create three replicas of the same model through the
 ``Experiment.create_ensemble()`` function. ``CobaltBatchSettings`` are created
-to specify resources for the entire batch. ``AprunSettings`` are created
+to specify resources for the entire batch. ``MpirunSettings`` are created
 to specify how each member within the batch should be launched.
 
 Before running the example, be sure to change the ``account`` number in the
@@ -180,7 +210,7 @@ file and any other batch settings for submission.
 Then, compile the simple hello world MPI program.
 
 ```bash
-cc hello.c -o hello
+gcc hello.c -o hello
 ```
 
 and run the workflow with

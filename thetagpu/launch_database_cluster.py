@@ -32,9 +32,6 @@ def collect_db_hosts(num_hosts):
     else:
         raise Exception("could not parse interactive allocation nodes from COBALT_NODEFILE")
 
-    # account for mpiprocs causing repeats in COBALT_NODEFILE
-    hosts = list(set(hosts))
-
     if len(hosts) >= num_hosts:
         return hosts[:num_hosts]
     else:
