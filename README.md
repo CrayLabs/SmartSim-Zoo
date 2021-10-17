@@ -144,3 +144,22 @@ can be of benefit to new users.
  - OS: Red Hat Enterprise Linux (RHEL)
  - CPU: Power9
  - GPU: Nvidia V100
+
+### Argonne National Lab
+
+#### 1. Theta
+
+ - Contributing user: CrayLabs
+ - [implementation](https://github.com/CrayLabs/SmartSim-zoo/tree/master/theta) (this repo)
+ - System:
+ - OS: HPE Cray OS
+ - CPU: Intel KNL
+
+#### 2. ThetaGPU
+
+ - Contributing user: CrayLabs
+ - [implementation](https://github.com/CrayLabs/SmartSim-zoo/tree/master/theta) (this repo)
+ - System:
+ - OS: Ubuntu
+ - CPU: AMD Rome
+ - GPU: Nvidia A100
