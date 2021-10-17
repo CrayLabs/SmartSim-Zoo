@@ -42,7 +42,10 @@ smart --device cpu --onnx
 ```
 
 Alternatively, if a bleeding-edge version of SmartSim or SmartRedis is
-required, an installer script is available in this repository.
+required, an installer script is available in this repository. It will
+create a conda environment on the lustre filesystem (this can be modified): the
+environment variable `PROJECT` has to be modified according to the user's
+available project.
 
 If you run into trouble with the installation, please consult the installation
 documentation [here](https://www.craylabs.org/docs/installation.html).
