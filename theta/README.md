@@ -127,7 +127,7 @@ model above through a batch script instead of an interactive allocation.
 ```bash
 #!/bin/bash
 #COBALT -t 10
-#COBALT -n 8
+#COBALT -n 2
 #COBALT -q <queue>
 #COBALT -A <account>
 

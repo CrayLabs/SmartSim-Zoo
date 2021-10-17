@@ -10,7 +10,7 @@ this example runs in an interactive allocation. When using openmpi
 on cheyenne, be sure to include the number of `mpiprocs` in your
 allocation line.
 
-i.e. qsub -n 2 -l walltime=01:00:00 -A <account> -q <queue> -I
+i.e. qsub -n 3 -l walltime=01:00:00 -A <account> -q <queue> -I
 """
 
 exp = Experiment("simple", launcher="cobalt")
@@ -18,7 +18,7 @@ exp = Experiment("simple", launcher="cobalt")
 # see https://www.craylabs.org/docs/api/smartsim_api.html#mpirunsettings
 aprun = AprunSettings("hello") # hello is name of executable
 aprun.set_tasks_per_node(20)
-aprun.set_tasks(40)
+aprun.set_tasks(60)
 
 # create a model with the settings we have defined
 # this is like pythonic reference to a running job

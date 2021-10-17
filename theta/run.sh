@@ -1,6 +1,6 @@
 #!/bin/bash
 #COBALT -t 10
-#COBALT -n 2
+#COBALT -n 3
 #COBALT -q <queue>
 #COBALT -A <account>
 
