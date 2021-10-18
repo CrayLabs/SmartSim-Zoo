@@ -1,9 +1,6 @@
-import os
-
 from smartsim import Experiment
 from smartsim.database import CobaltOrchestrator
 from smartsim.settings import AprunSettings
-
 
 
 def launch_cluster_orc(experiment, port):
@@ -33,7 +30,7 @@ def launch_cluster_orc(experiment, port):
 def create_producer(experiment):
 
     aprun = AprunSettings(exe="python",
-                           exe_args="producer.py")
+                          exe_args="producer.py")
     aprun.set_tasks(1)
     producer = experiment.create_model("producer", aprun)
 

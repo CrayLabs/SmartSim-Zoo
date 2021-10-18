@@ -22,7 +22,7 @@ exp = Experiment("batch_ensemble", launcher="cobalt")
 
 # define resources available to the ensemble in batch
 
-batch = CobaltBatchSettings(queue=queue, account=account, nodes=3, )
+batch = CobaltBatchSettings(queue=queue, account=account, nodes=3, time='00:05:00')
 
 # define how each member of the ensemble should
 # be executed. in this case: aprun -n 10 ./hello
