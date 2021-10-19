@@ -71,6 +71,7 @@ def create_producer(experiment):
     mpirun = MpirunSettings(exe="python",
                             exe_args="producer.py")
     mpirun.set_tasks(1)
+    mpirun.set_task_map("node:PE=128")
     producer = experiment.create_model("producer", mpirun)
 
     # create directories for the output files and copy

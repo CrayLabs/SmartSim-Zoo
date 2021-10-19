@@ -15,7 +15,8 @@ exp = Experiment("simple", launcher="cobalt")
 # see https://www.craylabs.org/docs/api/smartsim_api.html#mpirunsettings
 mpirun = MpirunSettings("hello") # hello is name of executable
 mpirun.set_tasks(40)
-mpirun.set_task_map("node:PE=20")
+mpirun.set_task_map("node:PE=128")
+mpirun.run_args["oversubscribe"] = None
 
 # create a model with the settings we have defined
 # this is like pythonic reference to a running job

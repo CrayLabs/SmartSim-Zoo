@@ -16,7 +16,7 @@ batch workload
 """
 
 account = "YOURACCOUNT"
-queue = "YOURQUEUE"
+queue = "full-node"
 
 exp = Experiment("batch_ensemble", launcher="cobalt")
 
