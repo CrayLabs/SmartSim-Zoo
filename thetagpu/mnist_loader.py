@@ -6,8 +6,8 @@ import numpy as np
 
 
 """This is the loader code for the `launch_mnist.py` example. It 
-   it is launched through SmartSim, and the Orchestrator is up and
-   running. 
+   it is launched through SmartSim, and assumes that the
+   Orchestrator is up and running. 
 """
 
 mnist_train = MNIST("mnist", train=True, download=True)
@@ -41,12 +41,12 @@ mnist_dataset = Dataset("MNIST_test")
 mnist_dataset.add_tensor("samples", mnist_test_samples)
 mnist_dataset.add_tensor("labels", mnist_test_labels)
 
+# Put test samples on DB and infer labels with stored model
 client.put_dataset(mnist_dataset)
-
 client.run_model("trained_model", inputs=["{MNIST_test}.samples"], outputs=["{MNIST_test}.inferred"])
 
+# Set script to compute accuracy and run it
 client.set_script_from_file("mnist_script", "./mnist_script.py", device="GPU")
-
 client.run_script("mnist_script", "check_accuracy", inputs=["{MNIST_test}.inferred", "{MNIST_test}.labels"], outputs=["{MNIST_test}.accuracy"])
 
 accuracy = client.get_tensor("{MNIST_test}.accuracy")[0]*100

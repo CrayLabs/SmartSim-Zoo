@@ -29,6 +29,9 @@ class ResNetMNIST(nn.Module):
 
 
 model = ResNetMNIST().cuda()
+criterion = torch.nn.CrossEntropyLoss()
+optimizer = torch.optim.RMSprop(model.parameters(), lr=0.005)
+
 client = Client(None, False)
 
 while not client.dataset_exists("MNIST_train"):
@@ -37,14 +40,11 @@ while not client.dataset_exists("MNIST_train"):
 
 mnist_data = client.get_dataset("MNIST_train")
 
-train_samples = torch.tensor(mnist_data.get_tensor("samples"))[0:10000].cuda()
-train_labels = torch.tensor(mnist_data.get_tensor("labels"))[0:10000].cuda()
+train_samples = torch.tensor(mnist_data.get_tensor("samples")).cuda()
+train_labels = torch.tensor(mnist_data.get_tensor("labels")).cuda()
 
 torch_ds = torch.utils.data.TensorDataset(train_samples, train_labels)
 torch_dl = torch.utils.data.DataLoader(torch_ds, batch_size=256)
-
-criterion = torch.nn.CrossEntropyLoss()
-optimizer = torch.optim.RMSprop(model.parameters(), lr=0.005)
 
 
 start_time = time()
