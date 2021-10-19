@@ -228,6 +228,32 @@ and run the workflow with
 ```bash
 python launch_ensemble_batch.py
 ```
+-----------
+### 5. launch_mnist.py
 
+Launch an orchestrator, a Loader, and a Trainer process.
+The Loader gets the MNIST dataset from disk and puts it on the DB. 
+The Trainer gets MNIST from the DB, trains a ResNet18 instance
+and puts the resulting jit-traced model on the DB. The loader
+then uploads the test set on the DB and computes the accuracy
+using the jit-traced model directly on the DB.
 
+This example runs within a three-node interactive allocation,
+to obtain it just run
+```bash
+# fill in account and queue parameters
+qsub -n 3 -l walltime=00:20:00 -A <account> -q <queue> -I
+```
+and then from the MOM node
+```bash
+python launch_mnist.py
+```
+
+Note that the driver expects the MNIST dataset to be available
+in the launching directory. You can obtain it from a theta login
+node running
+```bash
+python get_mnist.py
+```
+from the directory containing the driver script.
 
