@@ -58,7 +58,7 @@ the database to be launched on.
 
 This can be automated, and code for the automation of hostname aquisition is included in
 most of the files. This recipe can be followed for launching the Orchestrator with
-OpenMPI on PBS systems.
+OpenMPI on Cobalt systems.
 
 
 ```python
