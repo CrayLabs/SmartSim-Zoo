@@ -4,11 +4,8 @@ from smartsim.settings import MpirunSettings
 """
 Create a simple model that runs a hello_world.c program
 
-Make sure to have openmpi loaded (module load openmpi)
-
-this example runs in an interactive allocation. When using openmpi
-on cheyenne, be sure to include the number of `mpiprocs` in your
-allocation line.
+Make sure to have openmpi loaded, 
+this example runs in an interactive allocation.
 
 i.e. qsub -n 3 -l walltime=01:00:00 -A <account> -q <queue> -I
 """
@@ -18,7 +15,8 @@ exp = Experiment("simple", launcher="cobalt")
 # see https://www.craylabs.org/docs/api/smartsim_api.html#mpirunsettings
 mpirun = MpirunSettings("hello") # hello is name of executable
 mpirun.set_tasks(40)
-mpirun.set_task_map("node:PE=20")
+mpirun.set_task_map("node:PE=128")
+mpirun.run_args["oversubscribe"] = None
 
 # create a model with the settings we have defined
 # this is like pythonic reference to a running job

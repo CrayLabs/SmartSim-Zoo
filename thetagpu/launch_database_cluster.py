@@ -14,12 +14,16 @@ SmartRedis python client to send and receive some numpy arrays.
 This example runs in an interactive allocation with at least three
 nodes and 1 processor per node.
 
-i.e. qsub -l select=3:ncpus=1 -l walltime=00:10:00 -A <account> -q premium -I
+i.e. qsub -l select=3:ncpus=1 -l walltime=00:10:00 -A <account> -q <queue> -I
 """
 
 def collect_db_hosts(num_hosts):
     """A simple method to collect hostnames because we are using
-       openmpi. (not needed for aprun (ALPS), srun (Slurm), etc.
+       openmpi. (not needed for aprun (ALPS), srun (Slurm), etc.)
+
+       We append `.mcp` to each host name, as that is the
+       name of the host attached to the high-bandwidth network.
+
     """
 
     hosts = []
@@ -28,7 +32,7 @@ def collect_db_hosts(num_hosts):
         with open(node_file, "r") as f:
             for line in f.readlines():
                 host = line.strip()
-                hosts.append(host)
+                hosts.append(host + ".mcp")
     else:
         raise Exception("could not parse interactive allocation nodes from COBALT_NODEFILE")
 
@@ -78,7 +82,7 @@ db = launch_cluster_orc(exp, db_hosts, db_port)
 # client languages: C++, C, Fortran, Python
 
 # only need one address of one shard of DB to connect client
-db_address = ":".join((db_hosts[0], str(db_port)))
+db_address = db.get_address()[0]
 client = Client(address=db_address, cluster=True)
 
 # put into database

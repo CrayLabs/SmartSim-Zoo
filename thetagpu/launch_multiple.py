@@ -18,7 +18,10 @@ i.e. qsub -n 3 -l walltime=00:20:00 -A <account> -q <queue> -I
 
 def collect_db_hosts(num_hosts):
     """A simple method to collect hostnames because we are using
-       openmpi. (not needed for aprun(ALPS), Slurm, etc.
+       openmpi. (not needed for aprun(ALPS), Slurm, etc.)
+
+       We append `.mcp` to each host name, as that is the
+       name of the host attached to the high-bandwidth network.
     """
 
     hosts = []
@@ -27,7 +30,7 @@ def collect_db_hosts(num_hosts):
         with open(node_file, "r") as f:
             for line in f.readlines():
                 host = line.strip()
-                hosts.append(host)
+                hosts.append(host + ".mcp")
     else:
         raise Exception("could not parse interactive allocation nodes from COBALT_NODEFILE")
 
@@ -68,6 +71,7 @@ def create_producer(experiment):
     mpirun = MpirunSettings(exe="python",
                             exe_args="producer.py")
     mpirun.set_tasks(1)
+    mpirun.set_task_map("node:PE=128")
     producer = experiment.create_model("producer", mpirun)
 
     # create directories for the output files and copy

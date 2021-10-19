@@ -15,6 +15,7 @@ The following module commands were utilized to run the examples
 
 ```bash
 module load conda
+module load nvhpc-byo-compiler
 ```
 
 With this environment loaded, users will need to build and install both SmartSim and
@@ -29,14 +30,23 @@ after the correct conda environment was loaded.
 ```bash
 export CC=$(which gcc)
 export CXX=$(which g++)
-pip install . tensorflow==2.4.2 numpy==1.19.5 torch==1.7.1 onnx==1.7 
+conda install swig cmake git-lfs 
+conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch -y
+pip install . tensorflow==2.4.2 numpy==1.19.5 onnx==1.7 
 export CUDNN_LIBRARY_DIR=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/lib
 export CUDNN_LIBRARY=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/lib
 export CUDNN_INCLUDE_DIR=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/include
-conda install swig cmake git-lfs -y
 pip install smartsim
+
 smart --device cpu --onnx
 ```
+
+When running smartsim, the module `nvhpc-byo-compiler` will have to be loaded and
+the load library path will have to include the conda libraries:
+```bash
+export LD_LIBRARY_PATH=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/lib/:$LD_LIBRARY_PATH
+```
+
 
 Alternatively, if a bleeding-edge version of SmartSim or SmartRedis is
 required, an installer script is available in this repository. It will
@@ -58,7 +68,7 @@ the database to be launched on.
 
 This can be automated, and code for the automation of hostname aquisition is included in
 most of the files. This recipe can be followed for launching the Orchestrator with
-OpenMPI on PBS systems.
+OpenMPI on Cobalt systems.
 
 
 ```python
@@ -108,7 +118,7 @@ with SmartSim and SmartRedis installed.
 Compile the simple hello world MPI program.
 
 ```bash
-gcc hello.c -o hello
+mpicc hello.c -o hello
 ```
 
 Run the model through SmartSim in the interactive allocation
@@ -210,7 +220,7 @@ file and any other batch settings for submission.
 Then, compile the simple hello world MPI program.
 
 ```bash
-gcc hello.c -o hello
+mpicc hello.c -o hello
 ```
 
 and run the workflow with
@@ -218,6 +228,32 @@ and run the workflow with
 ```bash
 python launch_ensemble_batch.py
 ```
+-----------
+### 5. launch_mnist.py
 
+Launch an orchestrator, a Loader, and a Trainer process.
+The Loader gets the MNIST dataset from disk and puts it on the DB. 
+The Trainer gets MNIST from the DB, trains a ResNet18 instance
+and puts the resulting jit-traced model on the DB. The loader
+then uploads the test set on the DB and computes the accuracy
+using the jit-traced model directly on the DB.
 
+This example runs within a three-node interactive allocation,
+to obtain it just run
+```bash
+# fill in account and queue parameters
+qsub -n 3 -l walltime=00:20:00 -A <account> -q <queue> -I
+```
+and then from the MOM node
+```bash
+python launch_mnist.py
+```
+
+Note that the driver expects the MNIST dataset to be available
+in the launching directory. You can obtain it from a theta login
+node running
+```bash
+python get_mnist.py
+```
+from the directory containing the driver script.
 

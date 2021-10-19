@@ -16,11 +16,11 @@ batch workload
 """
 
 account = "YOURACCOUNT"
-queue = "YOURQUEUE"
+queue = "full-node"
 
 exp = Experiment("batch_ensemble", launcher="cobalt")
 
-batch = CobaltBatchSettings(queue=queue, account=account, nodes=3, walltime="00:10:00")
+batch = CobaltBatchSettings(queue=queue, account=account, nodes=3, time="00:10:00")
 
 # define how each member of the ensemble should
 # be executed. in this case: mpirun -np 10 ./hello

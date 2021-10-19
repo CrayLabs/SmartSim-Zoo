@@ -6,9 +6,7 @@ Create a simple model that runs a hello_world.c program
 
 Make sure to have openmpi loaded (module load openmpi)
 
-this example runs in an interactive allocation. When using openmpi
-on cheyenne, be sure to include the number of `mpiprocs` in your
-allocation line.
+this example runs in an interactive allocation.
 
 i.e. qsub -n 3 -l walltime=01:00:00 -A <account> -q <queue> -I
 """

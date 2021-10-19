@@ -55,7 +55,7 @@ db = launch_cluster_orc(exp, db_port)
 # client languages: C++, C, Fortran, Python
 
 # only need one address of one shard of DB to connect client
-db_address = db.get_address.get_address()[0]
+db_address = db.get_address()[0]
 client = Client(address=db_address, cluster=True)
 
 # put into database
