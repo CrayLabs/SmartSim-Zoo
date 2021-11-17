@@ -212,3 +212,42 @@ from a login node, by running
 python get_mnist.py
 ```
 
+-----------
+### 6. Online training and inference with Fortran data producer
+
+Launch an orchestrator, a parallel data producer/loader, a parallel trainer 
+and an inference process.
+The loader is a parallel Fortran program that emulates a PDE solver, 
+iteratively generating new training data as it marches through time steps 
+and putting the training data from each rank into the orchesrator. 
+The trainer gets the data from the orchestrator at the creation of every new
+training batch and learns the model. In this example, a simple model for a second
+order polynomial is trained. Finally, the trained model is saved to disk as well as
+loaded onto the orchestrator, where the final process performs online inference and
+visualization of the accuracy of the predictions.
+
+You can find the code for this example [here.](https://github.com/FilippoSimini/smartsim_alcf/tree/main/theta/exampleFortran)
+This example is run by submitting a job to the queue in batch mode, running the script
+```bash
+./submit.sh
+```
+from the login nodes. 
+Alternatively, one can submit an interactive job with
+```bash
+qsub -I -q queue -n 4 -t 30 -A charge_account
+```
+and replacing the strings queue and charge_account with the desired names.
+Then, once on the mom nodes, run the script
+```bash
+./run.sh 64 4 256 1 2 1 128 64
+```
+which inclused the command line arguments that would have been passed by the submit
+script.
+
+Please note that this example needs to be run with the GNU programming environment
+on Theta, and thus SmartSim and SmartRedis should be installed with the appropriate
+environment as well. You can find scripts to execute the installation of all SmartSim
+components as well as Horovod (needed for the data parallel training) [here.](https://github.com/FilippoSimini/smartsim_alcf/tree/main/theta)
+
+
+
