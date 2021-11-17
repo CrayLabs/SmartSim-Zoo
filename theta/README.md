@@ -241,7 +241,7 @@ Then, once on the mom nodes, run the script
 ```bash
 ./run.sh 64 4 256 1 2 1 128 64
 ```
-which inclused the command line arguments that would have been passed by the submit
+which includes the command line arguments that would have been passed by the submit
 script.
 
 Please note that this example needs to be run with the GNU programming environment
