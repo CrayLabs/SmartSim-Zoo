@@ -4,7 +4,7 @@ from smartsim.settings import AprunSettings
 
 
 """This driver starts an orchestrator, a loader, and a
-   trainer process. 
+   trainer process.
 
    As on Theta the compute nodes cannot (easily) download
    MNIST, the user should download it (through PyTorch)

@@ -18,7 +18,7 @@ ncar_pylib -c 20201220 /glade/work/$USER/casper_npl_clone
 
 ``pip install smartsim``
 
-``smart --device gpu``
+``smart build --device gpu``
 
 ``pip install smartredis``
 

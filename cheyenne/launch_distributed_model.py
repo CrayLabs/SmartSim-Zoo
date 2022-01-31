@@ -13,7 +13,8 @@ allocation line.
 i.e. qsub -l select=2:ncpus=20:mpiprocs=20 -l walltime=01:00:00 -A <account> -q premium -I
 """
 
-exp = Experiment("simple", launcher="pbs")
+# SmartSim will detect that cheyenne is a PBS system automatically
+exp = Experiment("simple", launcher="auto")
 
 # see https://www.craylabs.org/docs/api/smartsim_api.html#mpirunsettings
 mpirun = MpirunSettings("hello") # hello is name of executable

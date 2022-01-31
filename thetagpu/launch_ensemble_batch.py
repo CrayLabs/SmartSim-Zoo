@@ -18,7 +18,7 @@ batch workload
 account = "YOURACCOUNT"
 queue = "full-node"
 
-exp = Experiment("batch_ensemble", launcher="cobalt")
+exp = Experiment("batch_ensemble", launcher="auto")
 
 batch = CobaltBatchSettings(queue=queue, account=account, nodes=3, time="00:10:00")
 

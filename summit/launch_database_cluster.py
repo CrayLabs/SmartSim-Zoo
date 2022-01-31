@@ -1,4 +1,3 @@
-import os
 import numpy as np
 
 from smartsim import Experiment
@@ -45,8 +44,9 @@ def launch_cluster_orc(experiment, port):
 
     return db
 
-# create the experiment and specify LSF because Summit is a LSF system
-exp = Experiment("launch_cluster_db", launcher="lsf")
+# create the experiment and specify auto because SmartSim
+# will automatically detect that Summit is a LSF system
+exp = Experiment("launch_cluster_db", launcher="auto")
 
 db_port = 6780
 # start the database

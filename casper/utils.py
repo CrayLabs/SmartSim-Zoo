@@ -21,7 +21,7 @@ def run_cmd(cmd, input_str=None, from_dir=None, verbose=None,
         arg_stdout = _convert_to_fd(arg_stdout, from_dir)
 
     if combine_output:
-        arg_stderr = subprocess.STDOUT 
+        arg_stderr = subprocess.STDOUT
     elif isinstance(arg_stderr, str):
         arg_stderr = _convert_to_fd(arg_stdout, from_dir)
 
@@ -46,7 +46,7 @@ def run_cmd(cmd, input_str=None, from_dir=None, verbose=None,
 
     # In Python3, subprocess.communicate returns bytes. We want to work with strings
     # as much as possible, so we convert bytes to string (which is unicode in py3) via
-    # decode. 
+    # decode.
     if output is not None:
         try:
             output = output.decode('utf-8', errors='ignore')

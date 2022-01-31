@@ -26,7 +26,7 @@ With this environment loaded, users will need to build and install both SmartSim
 SmartRedis through pip. Users are advised to build on
 compute nodes, but the whole process can be run on any node.
 Usually we recommend users installing or loading miniconda and
-using the pip that comes with that installation. 
+using the pip that comes with that installation.
 
 The following commands were utilized to build SmartSim on Theta,
 after the needed Conda environment was loaded.
@@ -38,7 +38,7 @@ export CC=$(which cc)
 export CXX=$(which CC)
 conda install swig cmake git-lfs -y
 pip install smartsim[ml]
-smart --device cpu --onnx
+smart build --device cpu --onnx
 ```
 
 Alternatively, if a bleeding-edge version of SmartSim or SmartRedis is

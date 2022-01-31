@@ -24,4 +24,4 @@ cd ..
 cd smartsim
 conda install swig cmake git-lfs -y
 pip install .[ml]
-smart --device cpu --onnx
+smart build --device cpu --onnx

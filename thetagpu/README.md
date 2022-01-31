@@ -30,15 +30,15 @@ after the correct conda environment was loaded.
 ```bash
 export CC=$(which gcc)
 export CXX=$(which g++)
-conda install swig cmake git-lfs 
+conda install swig cmake git-lfs
 conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch -y
-pip install . tensorflow==2.4.2 numpy==1.19.5 onnx==1.7 
+pip install . tensorflow==2.4.2 numpy==1.19.5 onnx==1.7
 export CUDNN_LIBRARY_DIR=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/lib
 export CUDNN_LIBRARY=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/lib
 export CUDNN_INCLUDE_DIR=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/include
 pip install smartsim
 
-smart --device cpu --onnx
+smart build --device cpu --onnx
 ```
 
 When running smartsim, the module `nvhpc-byo-compiler` will have to be loaded and
@@ -66,7 +66,7 @@ When utilizing OpenMPI (as opposed to  `aprun`, as on Theta) to launch the
 Orchestrator database, SmartSim needs to be informed of the nodes the user would like
 the database to be launched on.
 
-This can be automated, and code for the automation of hostname aquisition is included in
+This can be automated, and code for the automation of hostname acquisition is included in
 most of the files. This recipe can be followed for launching the Orchestrator with
 OpenMPI on Cobalt systems.
 
@@ -105,7 +105,7 @@ a simulation or other workload that contains the SmartRedis clients and commuica
 with the Orchestrator.
 
 This example runs in an interactive allocation with at least three
-nodes and 20 processors per node. 
+nodes and 20 processors per node.
 
 ```bash
 # fill in account and queue parameters
@@ -182,7 +182,7 @@ as well.
 It is important to note in this example that the database and producer are running
 a converged workflow - that is, the database and application are placed on the same
 nodes. Add a node(s) to the interactive allocation line if you wish for the data
-producer to run on a seperate node.
+producer to run on a separate node.
 
 ```bash
 # fill in account and queue parameters
@@ -232,7 +232,7 @@ python launch_ensemble_batch.py
 ### 5. launch_mnist.py
 
 Launch an orchestrator, a Loader, and a Trainer process.
-The Loader gets the MNIST dataset from disk and puts it on the DB. 
+The Loader gets the MNIST dataset from disk and puts it on the DB.
 The Trainer gets MNIST from the DB, trains a ResNet18 instance
 and puts the resulting jit-traced model on the DB. The loader
 then uploads the test set on the DB and computes the accuracy
@@ -256,4 +256,3 @@ node running
 python get_mnist.py
 ```
 from the directory containing the driver script.
-

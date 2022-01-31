@@ -41,7 +41,7 @@ launching SmartSim.
 ### 1. launch_distributed_model_lsf.py and launch_distributed_model_ompi.py
 
 Launch a distributed model with OpenMPI through SmartSim. This could represent
-a simulation or other workload that contains the SmartRedis clients and commuicates
+a simulation or other workload that contains the SmartRedis clients and communicates
 with the Orchestrator.
 
 This example runs in an interactive allocation with at least 40 processors, i.e. one node
@@ -98,7 +98,7 @@ to provide an example of how users can interact with the database in an interact
 fashion, possibly in a medium like a jupyter notebook.
 
 This example runs in an interactive allocation with at least three
-nodes. 
+nodes.
 
 ```bash
 # fill in account and queue parameters

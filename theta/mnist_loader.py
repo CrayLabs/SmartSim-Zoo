@@ -5,9 +5,9 @@ from torchvision.transforms.functional import to_tensor
 import numpy as np
 
 
-"""This is the loader code for the `launch_mnist.py` example. It 
+"""This is the loader code for the `launch_mnist.py` example. It
    it is launched through SmartSim, and the Orchestrator is up and
-   running. 
+   running.
 """
 
 mnist_train = MNIST("mnist", train=True, download=True)

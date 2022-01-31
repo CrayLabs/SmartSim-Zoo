@@ -6,7 +6,7 @@ from smartsim.settings import MpirunSettings
 
 
 """This driver starts an orchestrator, a loader, and a
-   trainer process. 
+   trainer process.
 
    As on Theta the compute nodes cannot (easily) download
    MNIST, the user should download it (through PyTorch)
@@ -112,8 +112,9 @@ def create_trainer(experiment, host):
     experiment.generate(trainer, overwrite=True)
     return trainer
 
-# create the experiment and specify Cobalt because ThetaGPU is a Cobalt system
-exp = Experiment("launch_mnist", launcher="cobalt")
+# create the experiment and specify auto because SmartSim
+# will automatically detect that ThetaGPU is a Cobalt system
+exp = Experiment("launch_mnist", launcher="auto")
 
 db_port = 6780
 hosts = collect_hosts(3)

@@ -11,9 +11,9 @@ from torchvision.transforms.functional import to_tensor
 
 import io
 
-"""This is the trainer code for the `launch_mnist.py` example. It 
+"""This is the trainer code for the `launch_mnist.py` example. It
    it is launched through SmartSim, and the Orchestrator is up and
-   running. 
+   running.
 """
 
 # Taken from https://github.com/marrrcin/pytorch-resnet-mnist/blob/master/pytorch-resnet-mnist.ipynb
@@ -29,7 +29,7 @@ class ResNetMNIST(nn.Module):
 
 
 model = ResNetMNIST()
-client = Client(None, False)
+client = Client(address=None, cluster=False)
 
 while not client.dataset_exists("MNIST_train"):
     print("Waiting for batches to be available")
@@ -66,7 +66,7 @@ for epoch in range(1):
         end_time = time()
         print(f"batch {t+1}/{len(torch_dl)}",
               f"Loss: {loss.item()}",
-              f"Batch time: {end_time-start_time} seconds", 
+              f"Batch time: {end_time-start_time} seconds",
               f"Accuracy: {acc}%")
         start_time = time()
 

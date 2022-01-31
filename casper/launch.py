@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-import os, sys
+import sys
 
-import argparse, subprocess
+import argparse
 from string import Template
 from utils import run_cmd
 
@@ -29,15 +29,15 @@ def parse_command_line(args, description):
         ngpus = ":ngpus="+args.ngpus_per_node
 
 
-    return {"db_nodes":args.db_nodes, "ngpus": ngpus, "client_nodes": args.ensemble_size*args.member_nodes, 
-            "walltime": args.walltime, "account" : args.account, "member_nodes": args.member_nodes, 
+    return {"db_nodes":args.db_nodes, "ngpus": ngpus, "client_nodes": args.ensemble_size*args.member_nodes,
+            "walltime": args.walltime, "account" : args.account, "member_nodes": args.member_nodes,
             "ensemble_size": args.ensemble_size, "db_port": args.db_port, "python_sys_path": sys.path}
 
 def _main_func(desc):
     templatevars = parse_command_line(sys.argv, desc)
-    
+
     template_files = ["resv_job.template", "launch_database_cluster.template", "launch_client.template"]
-    
+
     for template in template_files:
         with open(template) as f:
             src = Template(f.read())

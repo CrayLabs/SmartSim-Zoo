@@ -68,8 +68,9 @@ def launch_cluster_orc(experiment, hosts, port):
 
     return db
 
-# create the experiment and specify Cobalt because Theta is a Cobalt system
-exp = Experiment("launch_cluster_db", launcher="cobalt")
+# create the experiment and specify auto because SmartSim
+# will automatically detect that ThetaGPU is a Cobalt system
+exp = Experiment("launch_cluster_db", launcher="auto")
 
 db_port = 6780
 db_hosts = collect_db_hosts(3)

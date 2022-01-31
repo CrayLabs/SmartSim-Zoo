@@ -15,10 +15,9 @@ import os, sys, time
 _LIBDIR = $python_sys_path
 sys.path.extend(_LIBDIR)
 
-import socket, subprocess
 import numpy as np
 from utils import run_cmd
-from smartsim import Experiment, constants
+from smartsim import Experiment
 from smartsim.database import PBSOrchestrator
 
 """
@@ -48,7 +47,7 @@ def collect_db_hosts(num_hosts):
     if len(hosts) >= num_hosts:
         return hosts[:num_hosts]
     else:
-        raise Exception("PBS_NODEFILE {} had {} hosts, not {}".format(node_file, len(hosts),num_hosts))
+        raise Exception("PBS_NODEFILE {} had {} hosts, not {}".format(node_file, len(hosts), num_hosts))
 
 
 def launch_cluster_orc(exp, db_hosts, port):
@@ -87,9 +86,9 @@ def monitor_client_jobs(rsvname):
 
 
 
-
-# create the experiment and specify PBS because cheyenne is a PBS system
-exp = Experiment("launch_cluster_db", launcher="pbs")
+# create the experiment and specify "auto" for launcher and
+# SmartSim will detect that cheyenne is a PBS system
+exp = Experiment("launch_cluster_db", launcher="auto")
 
 db_port = $db_port
 db_hosts = collect_db_hosts($db_nodes)

@@ -1,4 +1,3 @@
-import os
 import numpy as np
 
 from smartsim import Experiment
@@ -42,8 +41,9 @@ def launch_cluster_orc(experiment, port):
 
     return db
 
-# create the experiment and specify Cobalt because Theta is a Cobalt system
-exp = Experiment("launch_cluster_db", launcher="cobalt")
+# create the experiment and specify auto because SmartSim will
+# automatically detect that Theta is a Cobalt system
+exp = Experiment("launch_cluster_db", launcher="auto")
 
 db_port = 6780
 # start the database
