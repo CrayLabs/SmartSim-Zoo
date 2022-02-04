@@ -1,7 +1,7 @@
 
 # Cheyenne Tutorials
 
-Cheyenne is the supercomputer at the National Center for Atmopheric Research. The
+Cheyenne is the supercomputer at the National Center for Atmospheric Research (NCAR). The
 following tutorials are meant to aide users on Cheyenne with getting used to the
 different types of workflows that are possible with SmartSim.
 
@@ -38,7 +38,7 @@ When utilizing OpenMPI (as opposed to other run commands like ``srun``) to launc
 Orchestrator database, SmartSim needs to be informed of the nodes the user would like
 the database to be launched on.
 
-This can be automated, and code for the automation of hostname aquisition is included in
+This can be automated, and code for the automation of hostname acquisition is included in
 most of the files. This recipe can be followed for launching the Orchestrator with
 OpenMPI on PBS systems.
 
@@ -159,7 +159,7 @@ as well.
 It is important to note in this example that the database and producer are running
 a converged workflow - that is, the database and application are placed on the same
 nodes. Add a node(s) to the interactive allocation line if you wish for the data
-producer to run on a seperate node.
+producer to run on a separate node.
 
 ```bash
 # fill in account and queue parameters
@@ -184,7 +184,7 @@ the jobs to be launched.
 The higher level batch capabilities of SmartSim allow users to create many
 batch jobs of differing content without needing to write each one. As well,
 SmartSim acts as a batch process manager in Python allowing interactivity
-with the batch system to create pipelines, dependants, and conditions.
+with the batch system to create pipelines, dependents, and conditions.
 
 In this case, we create three replicas of the same model through the
 ``Experiment.create_ensemble()`` function. ``QsubBatchSettings`` are created

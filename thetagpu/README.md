@@ -22,7 +22,7 @@ With this environment loaded, users will need to build and install both SmartSim
 SmartRedis through pip. Users are advised to build on
 compute nodes, as the service nodes do not have all needed libraries installed.
 Usually we recommend users installing or loading miniconda and
-using the pip that comes with that installation. 
+using the pip that comes with that installation.
 
 The following commands were utilized to build SmartSim on Theta,
 after the correct conda environment was loaded.
@@ -49,7 +49,7 @@ export LD_LIBRARY_PATH=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_
 
 
 Alternatively, if a bleeding-edge version of SmartSim or SmartRedis is
-required, an installer script is available in this repository. It will
+required, the installer script `smartsim_thetagpu_installer.sh` is available in this repository. It will
 create a conda environment on the lustre filesystem (this can be modified): the
 environment variable `PROJECT` has to be modified according to the user's
 available project.
@@ -101,7 +101,7 @@ def collect_db_hosts(num_hosts):
 ### 1. launch_distributed_model.py
 
 Launch a distributed model with OpenMPI through SmartSim. This could represent
-a simulation or other workload that contains the SmartRedis clients and commuicates
+a simulation or other workload that contains the SmartRedis clients and communicates
 with the Orchestrator.
 
 This example runs in an interactive allocation with at least three
@@ -207,7 +207,7 @@ the jobs to be launched.
 The higher level batch capabilities of SmartSim allow users to create many
 batch jobs of differing content without needing to write each one. As well,
 SmartSim acts as a batch process manager in Python allowing interactivity
-with the batch system to create pipelines, dependants, and conditions.
+with the batch system to create pipelines, dependents, and conditions.
 
 In this case, we create three replicas of the same model through the
 ``Experiment.create_ensemble()`` function. ``CobaltBatchSettings`` are created

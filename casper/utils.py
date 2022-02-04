@@ -1,14 +1,24 @@
 import subprocess, os, io
 
+
 def _convert_to_fd(filearg, from_dir, mode="a"):
     filearg = _get_path(filearg, from_dir)
 
     return open(filearg, mode)
 
 
-def run_cmd(cmd, input_str=None, from_dir=None, verbose=None,
-            arg_stdout=subprocess.PIPE, arg_stderr=subprocess.PIPE, env=None,
-            combine_output=False, timeout=None, executable=None):
+def run_cmd(
+    cmd,
+    input_str=None,
+    from_dir=None,
+    verbose=None,
+    arg_stdout=subprocess.PIPE,
+    arg_stderr=subprocess.PIPE,
+    env=None,
+    combine_output=False,
+    timeout=None,
+    executable=None,
+):
     """
     Wrapper around subprocess to make it much more convenient to run shell commands
 
@@ -26,21 +36,27 @@ def run_cmd(cmd, input_str=None, from_dir=None, verbose=None,
         arg_stderr = _convert_to_fd(arg_stdout, from_dir)
 
     if verbose:
-        print("RUN: {}\nFROM: {}".format(cmd, os.getcwd() if from_dir is None else from_dir))
+        print(
+            "RUN: {}\nFROM: {}".format(
+                cmd, os.getcwd() if from_dir is None else from_dir
+            )
+        )
 
-    if (input_str is not None):
+    if input_str is not None:
         stdin = subprocess.PIPE
     else:
         stdin = None
 
-    proc = subprocess.Popen(cmd,
-                            shell=True,
-                            stdout=arg_stdout,
-                            stderr=arg_stderr,
-                            stdin=stdin,
-                            cwd=from_dir,
-                            executable=executable,
-                            env=env)
+    proc = subprocess.Popen(
+        cmd,
+        shell=True,
+        stdout=arg_stdout,
+        stderr=arg_stderr,
+        stdin=stdin,
+        cwd=from_dir,
+        executable=executable,
+        env=env,
+    )
 
     output, errput = proc.communicate(input_str)
 
@@ -49,12 +65,12 @@ def run_cmd(cmd, input_str=None, from_dir=None, verbose=None,
     # decode.
     if output is not None:
         try:
-            output = output.decode('utf-8', errors='ignore')
+            output = output.decode("utf-8", errors="ignore")
         except AttributeError:
             pass
     if errput is not None:
         try:
-            errput = errput.decode('utf-8', errors='ignore')
+            errput = errput.decode("utf-8", errors="ignore")
         except AttributeError:
             pass
 
@@ -66,10 +82,9 @@ def run_cmd(cmd, input_str=None, from_dir=None, verbose=None,
 
     stat = proc.wait()
     if isinstance(arg_stdout, io.IOBase):
-        arg_stdout.close() # pylint: disable=no-member
+        arg_stdout.close()  # pylint: disable=no-member
     if isinstance(arg_stderr, io.IOBase) and arg_stderr is not arg_stdout:
-        arg_stderr.close() # pylint: disable=no-member
-
+        arg_stderr.close()  # pylint: disable=no-member
 
     if verbose:
         if stat != 0:

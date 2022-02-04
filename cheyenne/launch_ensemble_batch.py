@@ -1,5 +1,4 @@
 from smartsim import Experiment
-from smartsim.settings import QsubBatchSettings, MpirunSettings
 
 """
 this example launches an ensemble of MPI hello_world
@@ -17,26 +16,22 @@ batch workload
 
 account = "NCGD0048"
 
-exp = Experiment("batch_ensemble", launcher="pbs")
+exp = Experiment("batch_ensemble", launcher="auto")
 
 # define resources available to the ensemble in batch
-resources = {
-    "select": "3:ncpus=10:mpiprocs=10",
-    "walltime": "00:10:00"
-}
-batch = QsubBatchSettings(queue="premium", account=account, resources=resources)
+resources = {"select": "3:ncpus=10:mpiprocs=10", "walltime": "00:10:00"}
+batch = exp.create_batch_settings(queue="premium", account=account, resources=resources)
 
 # define how each member of the ensemble should
 # be executed. in this case: mpirun -np 10 ./hello
-mpirun = MpirunSettings("hello")
+mpirun = exp.create_run_settings("hello", run_command="mpirun")
 mpirun.set_tasks(10)
 
 
 # create three replicas of the same model to run in a batch
-hello_world = exp.create_ensemble("hello_world_ensemble",
-                                  batch_settings=batch,
-                                  run_settings=mpirun,
-                                  replicas=3)
+hello_world = exp.create_ensemble(
+    "hello_world_ensemble", batch_settings=batch, run_settings=mpirun, replicas=3
+)
 
 # create directory for output files of this model
 exp.generate(hello_world, overwrite=True)
@@ -48,4 +43,3 @@ exp.start(hello_world, block=True, summary=True)
 print(f"Ensemble statuses: {exp.get_status(hello_world)}")
 
 print(exp.summary())
-

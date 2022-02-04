@@ -1,5 +1,4 @@
 from smartsim import Experiment
-from smartsim.settings import MpirunSettings
 
 """
 Create a simple model that runs a hello_world.c program
@@ -13,7 +12,9 @@ i.e. qsub -n 3 -l walltime=01:00:00 -A <account> -q <queue> -I
 exp = Experiment("simple", launcher="auto")
 
 # see https://www.craylabs.org/docs/api/smartsim_api.html#mpirunsettings
-mpirun = MpirunSettings("hello") # hello is name of executable
+mpirun = exp.create_run_settings(
+    "hello", run_command="mpirun"
+)  # hello is name of executable
 mpirun.set_tasks(40)
 mpirun.set_task_map("node:PE=128")
 mpirun.run_args["oversubscribe"] = None

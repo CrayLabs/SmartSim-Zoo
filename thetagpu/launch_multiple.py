@@ -2,7 +2,6 @@ import os
 
 from smartsim import Experiment
 from smartsim.database import CobaltOrchestrator
-from smartsim.settings import MpirunSettings
 
 
 """
@@ -16,12 +15,13 @@ allocation.
 i.e. qsub -n 3 -l walltime=00:20:00 -A <account> -q <queue> -I
 """
 
+
 def collect_db_hosts(num_hosts):
     """A simple method to collect hostnames because we are using
-       openmpi. (not needed for aprun(ALPS), Slurm, etc.)
+    openmpi. (not needed for aprun(ALPS), Slurm, etc.)
 
-       We append `.mcp` to each host name, as that is the
-       name of the host attached to the high-bandwidth network.
+    We append `.mcp` to each host name, as that is the
+    name of the host attached to the high-bandwidth network.
     """
 
     hosts = []
@@ -32,7 +32,9 @@ def collect_db_hosts(num_hosts):
                 host = line.strip()
                 hosts.append(host + ".mcp")
     else:
-        raise Exception("could not parse interactive allocation nodes from COBALT_NODEFILE")
+        raise Exception(
+            "could not parse interactive allocation nodes from COBALT_NODEFILE"
+        )
 
     if len(hosts) >= num_hosts:
         return hosts[:num_hosts]
@@ -42,16 +44,18 @@ def collect_db_hosts(num_hosts):
 
 def launch_cluster_orc(experiment, hosts, port):
     """Just spin up a database cluster, check the status
-       and tear it down"""
+    and tear it down"""
 
     print(f"Starting Orchestrator on hosts: {hosts}")
     # batch = False to launch on existing allocation
-    db_cluster = CobaltOrchestrator(port=port,
-                                db_nodes=3,
-                                batch=False,
-                                interface="enp226s0",
-                                run_command="mpirun",
-                                hosts=hosts)
+    db_cluster = CobaltOrchestrator(
+        port=port,
+        db_nodes=3,
+        batch=False,
+        interface="enp226s0",
+        run_command="mpirun",
+        hosts=hosts,
+    )
 
     # generate directories for output files
     # pass in objects to make dirs for
@@ -66,10 +70,10 @@ def launch_cluster_orc(experiment, hosts, port):
 
     return db_cluster
 
+
 def create_producer(experiment):
 
-    mpirun = MpirunSettings(exe="python",
-                            exe_args="producer.py")
+    mpirun = experiment.create_run_settings(exe="python", exe_args="producer.py")
     mpirun.set_tasks(1)
     mpirun.set_task_map("node:PE=128")
     producer = experiment.create_model("producer", mpirun)
@@ -80,6 +84,7 @@ def create_producer(experiment):
     producer.attach_generator_files(to_copy="./producer.py")
     experiment.generate(producer, overwrite=True)
     return producer
+
 
 # create the experiment and specify auto because SmartSim
 # will automatically detect that ThetaGPU is a Cobalt system
@@ -97,5 +102,3 @@ exp.start(model, block=True, summary=True)
 exp.stop(db)
 
 print(exp.summary())
-
-

@@ -22,7 +22,7 @@ The following modules were loaded to build the LSF examples
 The following modules were loaded to build the OpenMPI examples
 
 ```bash
- 1) hsi/5.0.2.p5   2) xalt/1.2.1   3) lsf-tools/2.0 
+ 1) hsi/5.0.2.p5   2) xalt/1.2.1   3) lsf-tools/2.0
  4) darshan-runtime/3.1.7   5) DefApps   6) gcc/8.1.1
  7) cuda/11.2.0   8) openmpi/4.0.3
 ```

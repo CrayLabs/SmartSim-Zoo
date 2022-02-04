@@ -1,5 +1,4 @@
-from smartsim import Experiment
-from smartsim.settings import MpirunSettings
+from smartsim import Experimen
 
 """
 Create a simple model that runs a hello_world.c program
@@ -14,7 +13,9 @@ e.g. bsub -Is -W 01:00 -J SmartSim-int -nnodes 1 -P <project> -alloc_flags smt1 
 exp = Experiment("simple", launcher="auto")
 
 # see https://www.craylabs.org/docs/api/smartsim_api.html#mpirunsettings
-mpirun = MpirunSettings("hello") # hello is name of executable
+mpirun = exp.create_run_settings(
+    "hello", run_command="mpirun"
+)  # hello is name of executable
 mpirun.set_tasks(40)
 
 # create a model with the settings we have defined
@@ -29,4 +30,3 @@ exp.start(hello_world, block=True, summary=True)
 
 # get the status (should be Completed because we set block=True)
 print(f"Model status: {exp.get_status(hello_world)}")
-

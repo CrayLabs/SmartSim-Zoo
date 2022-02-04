@@ -7,7 +7,6 @@ from time import sleep
 from time import time
 
 from torchvision.models import resnet18
-from torchvision.transforms.functional import to_tensor
 
 import io
 
@@ -21,7 +20,9 @@ class ResNetMNIST(nn.Module):
     def __init__(self):
         super().__init__()
         self.model = resnet18(num_classes=10)
-        self.model.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        self.model.conv1 = nn.Conv2d(
+            1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
+        )
         self.loss = nn.CrossEntropyLoss()
 
     def forward(self, x):
@@ -62,12 +63,17 @@ for epoch in range(1):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        acc = torch.mean((torch.argmax(y_pred, dim=1)==targets).float()).cpu().numpy()*100
+        acc = (
+            torch.mean((torch.argmax(y_pred, dim=1) == targets).float()).cpu().numpy()
+            * 100
+        )
         end_time = time()
-        print(f"batch {t+1}/{len(torch_dl)}",
-              f"Loss: {loss.item()}",
-              f"Batch time: {end_time-start_time} seconds",
-              f"Accuracy: {acc}%")
+        print(
+            f"batch {t+1}/{len(torch_dl)}",
+            f"Loss: {loss.item()}",
+            f"Batch time: {end_time-start_time} seconds",
+            f"Accuracy: {acc}%",
+        )
         start_time = time()
 
 compiled_model = torch.jit.script(model)

@@ -16,20 +16,22 @@ nodes and 1 processor per node.
 i.e. bsub -Is -W 01:00 -J SmartSim-int -nnodes 3 -P <project> -alloc_flags smt1 $SHELL
 """
 
+
 def launch_cluster_orc(experiment, port):
     """Just spin up a database cluster, check the status
-       and tear it down"""
+    and tear it down"""
 
     # batch = False to launch on existing allocation
 
-    db = LSFOrchestrator(port=port,
-                        db_per_host=2,
-                        db_nodes=6,
-                        batch=False,
-                        cpus_per_shard=21,
-                        gpus_per_shard=3,
-                        interface="ib0")
-
+    db = LSFOrchestrator(
+        port=port,
+        db_per_host=2,
+        db_nodes=6,
+        batch=False,
+        cpus_per_shard=21,
+        gpus_per_shard=3,
+        interface="ib0",
+    )
 
     # generate directories for output files
     # pass in objects to make dirs for
@@ -43,6 +45,7 @@ def launch_cluster_orc(experiment, port):
     print(f"Status of all database nodes: {statuses}")
 
     return db
+
 
 # create the experiment and specify auto because SmartSim
 # will automatically detect that Summit is a LSF system
@@ -62,7 +65,7 @@ db_address = ":".join((db._hosts[0], str(db_port)))
 client = Client(address=db_address, cluster=True)
 
 # put into database
-test_array = np.array([1,2,3,4])
+test_array = np.array([1, 2, 3, 4])
 print(f"Array put in database: {test_array}")
 client.put_tensor("test", test_array)
 
@@ -72,5 +75,3 @@ print(f"Array retrieved from database: {returned_array}")
 
 # shutdown the database because we don't need it anymore
 exp.stop(db)
-
-

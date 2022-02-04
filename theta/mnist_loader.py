@@ -14,7 +14,9 @@ mnist_train = MNIST("mnist", train=True, download=True)
 mnist_test = MNIST("mnist", train=False, download=True)
 
 # NCHW
-mnist_train_samples = np.stack([to_tensor(sample) for sample in mnist_train.data.numpy()])
+mnist_train_samples = np.stack(
+    [to_tensor(sample) for sample in mnist_train.data.numpy()]
+)
 mnist_train_labels = mnist_train.targets.detach().numpy()
 
 print(f"MNIST train shape: {mnist_train_samples.shape}")
@@ -43,11 +45,18 @@ mnist_dataset.add_tensor("labels", mnist_test_labels)
 
 client.put_dataset(mnist_dataset)
 
-client.run_model("trained_model", inputs=["{MNIST_test}.samples"], outputs=["{MNIST_test}.inferred"])
+client.run_model(
+    "trained_model", inputs=["{MNIST_test}.samples"], outputs=["{MNIST_test}.inferred"]
+)
 
 client.set_script_from_file("mnist_script", "./mnist_script.py")
 
-client.run_script("mnist_script", "check_accuracy", inputs=["{MNIST_test}.inferred", "{MNIST_test}.labels"], outputs=["{MNIST_test}.accuracy"])
+client.run_script(
+    "mnist_script",
+    "check_accuracy",
+    inputs=["{MNIST_test}.inferred", "{MNIST_test}.labels"],
+    outputs=["{MNIST_test}.accuracy"],
+)
 
-accuracy = client.get_tensor("{MNIST_test}.accuracy")[0]*100
+accuracy = client.get_tensor("{MNIST_test}.accuracy")[0] * 100
 print(f"Accuracy is {accuracy}%")
