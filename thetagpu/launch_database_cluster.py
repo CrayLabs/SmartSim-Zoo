@@ -2,7 +2,7 @@ import os
 import numpy as np
 
 from smartsim import Experiment
-from smartsim.database import CobaltOrchestrator
+from smartsim.database import Orchestrator
 
 from smartredis import Client
 
@@ -51,7 +51,8 @@ def launch_cluster_orc(experiment, hosts, port):
 
     print(f"Starting Orchestrator on hosts: {hosts}")
     # batch = False to launch on existing allocation
-    db = CobaltOrchestrator(
+    db = Orchestrator(
+        launcher="auto",
         port=port,
         db_nodes=3,
         batch=False,

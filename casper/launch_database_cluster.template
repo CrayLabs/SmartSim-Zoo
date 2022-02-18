@@ -17,7 +17,7 @@ sys.path.extend(_LIBDIR)
 
 from utils import run_cmd
 from smartsim import Experiment
-from smartsim.database import PBSOrchestrator
+from smartsim.database import Orchestrator
 
 """
 Launch a distributed, in memory database cluster and use the
@@ -55,7 +55,7 @@ def launch_cluster_orc(exp, db_hosts, port):
 
     print(f"Starting Orchestrator on hosts: {db_hosts}")
     # batch = False to launch on existing allocation
-    db = PBSOrchestrator(port=port, db_nodes=len(db_hosts), batch=False,
+    db = Orchestrator(launcher="auto", port=port, db_nodes=len(db_hosts), batch=False,
                           run_command="mpirun", hosts=db_hosts)
 
     # generate directories for output files

@@ -1,7 +1,7 @@
 import numpy as np
 
 from smartsim import Experiment
-from smartsim.database import CobaltOrchestrator
+from smartsim.database import Orchestrator
 
 from smartredis import Client
 
@@ -22,8 +22,13 @@ def launch_cluster_orc(experiment, port):
     and tear it down"""
 
     # batch = False to launch on existing allocation
-    db = CobaltOrchestrator(
-        port=port, db_nodes=3, batch=False, interface="ipogif0", run_command="aprun"
+    db = Orchestrator(
+        launcher="auto",
+        port=port,
+        db_nodes=3,
+        batch=False,
+        interface="ipogif0",
+        run_command="aprun",
     )
 
     # generate directories for output files

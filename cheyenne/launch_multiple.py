@@ -1,7 +1,7 @@
 import os
 
 from smartsim import Experiment
-from smartsim.database import PBSOrchestrator
+from smartsim.database import Orchestrator
 
 
 """
@@ -48,7 +48,8 @@ def launch_cluster_orc(experiment, hosts, port):
 
     print(f"Starting Orchestrator on hosts: {hosts}")
     # batch = False to launch on existing allocation
-    db_cluster = PBSOrchestrator(
+    db_cluster = Orchestrator(
+        launcher="auto",
         port=port,
         db_nodes=3,
         batch=False,

@@ -1,7 +1,7 @@
 import numpy as np
 
 from smartsim import Experiment
-from smartsim.database import LSFOrchestrator
+from smartsim.database import Orchestrator
 
 from smartredis import Client
 
@@ -23,7 +23,8 @@ def launch_cluster_orc(experiment, port):
 
     # batch = False to launch on existing allocation
 
-    db = LSFOrchestrator(
+    db = Orchestrator(
+        launcher="auto",
         port=port,
         db_per_host=2,
         db_nodes=6,

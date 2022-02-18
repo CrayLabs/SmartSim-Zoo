@@ -1,7 +1,7 @@
 import os
 
 from smartsim import Experiment
-from smartsim.database import CobaltOrchestrator
+from smartsim.database import Orchestrator
 
 
 """This driver starts an orchestrator, a loader, and a
@@ -59,7 +59,8 @@ def launch_cluster_orc(experiment, host, port):
 
     print(f"Starting Orchestrator on host: {host}")
     # batch = False to launch on existing allocation
-    db = CobaltOrchestrator(
+    db = Orchestrator(
+        launcher="auto",
         port=port,
         db_nodes=1,
         batch=False,

@@ -1,5 +1,5 @@
 from smartsim import Experiment
-from smartsim.database import CobaltOrchestrator
+from smartsim.database import Orchestrator
 
 
 """This driver starts an orchestrator, a loader, and a
@@ -29,8 +29,13 @@ def launch_orc(experiment, port):
     """Just spin up a single node database, check the status"""
 
     # batch = False to launch on existing allocation
-    db = CobaltOrchestrator(
-        port=port, db_nodes=1, batch=False, interface="ipogif0", run_command="aprun"
+    db = Orchestrator(
+        launcher="auto",
+        port=port,
+        db_nodes=1,
+        batch=False,
+        interface="ipogif0",
+        run_command="aprun",
     )
 
     # generate directories for output files
