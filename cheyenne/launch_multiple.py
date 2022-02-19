@@ -1,7 +1,6 @@
 import os
 
 from smartsim import Experiment
-from smartsim.database import Orchestrator
 
 
 """
@@ -47,15 +46,8 @@ def launch_cluster_orc(experiment, hosts, port):
     and tear it down"""
 
     print(f"Starting Orchestrator on hosts: {hosts}")
-    # batch = False to launch on existing allocation
-    db_cluster = Orchestrator(
-        launcher="auto",
-        port=port,
-        db_nodes=3,
-        batch=False,
-        interface="ib0",
-        run_command="mpirun",
-        hosts=hosts,
+    db_cluster = experiment.create_database(
+        port=port, db_nodes=3, run_command="mpirun", interface="ib0", hosts=hosts
     )
 
     # generate directories for output files

@@ -1,5 +1,4 @@
 from smartsim import Experiment
-from smartsim.database import Orchestrator
 
 
 """This driver starts an orchestrator, a loader, and a
@@ -28,15 +27,7 @@ from smartsim.database import Orchestrator
 def launch_orc(experiment, port):
     """Just spin up a single node database, check the status"""
 
-    # batch = False to launch on existing allocation
-    db = Orchestrator(
-        launcher="auto",
-        port=port,
-        db_nodes=1,
-        batch=False,
-        interface="ipogif0",
-        run_command="aprun",
-    )
+    db = experiment.create_database(port=port)
 
     # generate directories for output files
     # pass in objects to make dirs for

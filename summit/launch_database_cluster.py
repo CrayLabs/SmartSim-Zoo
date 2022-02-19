@@ -1,7 +1,6 @@
 import numpy as np
 
 from smartsim import Experiment
-from smartsim.database import Orchestrator
 
 from smartredis import Client
 
@@ -21,17 +20,13 @@ def launch_cluster_orc(experiment, port):
     """Just spin up a database cluster, check the status
     and tear it down"""
 
-    # batch = False to launch on existing allocation
-
-    db = Orchestrator(
-        launcher="auto",
+    db = experiment.create_database(
         port=port,
-        db_per_host=2,
         db_nodes=6,
-        batch=False,
+        interface="ib0",
+        db_per_host=2,
         cpus_per_shard=21,
         gpus_per_shard=3,
-        interface="ib0",
     )
 
     # generate directories for output files
