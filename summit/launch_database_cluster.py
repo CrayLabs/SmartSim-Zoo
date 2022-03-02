@@ -22,9 +22,8 @@ def launch_cluster_orc(experiment, port):
 
     db = experiment.create_database(
         port=port,
-        db_nodes=6,
+        db_nodes=3,
         interface="ib0",
-        db_per_host=2,
         cpus_per_shard=21,
         gpus_per_shard=3,
     )
