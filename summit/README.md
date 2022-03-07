@@ -27,8 +27,8 @@ The following modules were loaded to build the OpenMPI examples
  7) cuda/11.2.0   8) openmpi/4.0.3
 ```
 
-Please refer to the documentation for how to build SmartSim and SmartRedis on
-Summit [here](https://www.craylabs.org/docs/installation.html)
+Please refer to `smartsim_summit_installer.sh` in this directory and the documentation
+for how to build SmartSim and SmartRedis on Summit [here](https://www.craylabs.org/docs/installation.html).
 
 ## Examples
 
