@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 #BSUB -W 00:10
-#BSUB -P GEN150_SMARTSIM
+#BSUB -P PROJECTNAME
 #BSUB -J SmartSim
 #BSUB -nnodes 1
 
