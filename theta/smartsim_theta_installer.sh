@@ -23,5 +23,5 @@ make lib && pip install .
 cd ..
 cd smartsim
 conda install swig cmake git-lfs -y
-pip install -e .[dev] keras==2.3 tensorflow==2.4.2 onnx==1.9.0
+pip install .[ml]
 smart build --device cpu --onnx
