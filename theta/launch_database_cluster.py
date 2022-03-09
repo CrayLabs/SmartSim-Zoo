@@ -1,8 +1,6 @@
-import os
 import numpy as np
 
 from smartsim import Experiment
-from smartsim.database import CobaltOrchestrator
 
 from smartredis import Client
 
@@ -20,14 +18,9 @@ i.e. qsub -l select=3:ncpus=1 -l walltime=00:10:00 -A <account> -q premium -I
 
 def launch_cluster_orc(experiment, port):
     """Just spin up a database cluster, check the status
-       and tear it down"""
+    and tear it down"""
 
-    # batch = False to launch on existing allocation
-    db = CobaltOrchestrator(port=port,
-                            db_nodes=3,
-                            batch=False,
-                            interface="ipogif0",
-                            run_command="aprun")
+    db = experiment.create_database(port=port, db_nodes=3)
 
     # generate directories for output files
     # pass in objects to make dirs for
@@ -42,8 +35,10 @@ def launch_cluster_orc(experiment, port):
 
     return db
 
-# create the experiment and specify Cobalt because Theta is a Cobalt system
-exp = Experiment("launch_cluster_db", launcher="cobalt")
+
+# create the experiment and specify auto because SmartSim will
+# automatically detect that Theta is a Cobalt system
+exp = Experiment("launch_cluster_db", launcher="auto")
 
 db_port = 6780
 # start the database
@@ -59,7 +54,7 @@ db_address = db.get_address()[0]
 client = Client(address=db_address, cluster=True)
 
 # put into database
-test_array = np.array([1,2,3,4])
+test_array = np.array([1, 2, 3, 4])
 print(f"Array put in database: {test_array}")
 client.put_tensor("test", test_array)
 
@@ -69,5 +64,3 @@ print(f"Array retrieved from database: {returned_array}")
 
 # shutdown the database because we don't need it anymore
 exp.stop(db)
-
-

@@ -1,10 +1,8 @@
 from smartsim import Experiment
-from smartsim.database import CobaltOrchestrator
-from smartsim.settings import AprunSettings
 
 
 """This driver starts an orchestrator, a loader, and a
-   trainer process. 
+   trainer process.
 
    As on Theta the compute nodes cannot (easily) download
    MNIST, the user should download it (through PyTorch)
@@ -25,16 +23,11 @@ from smartsim.settings import AprunSettings
    Note that the inferred labels are not retrieved from the DB.
 """
 
-def launch_orc(experiment, port):
-    """Just spin up a single node database, check the status
-    """
 
-    # batch = False to launch on existing allocation
-    db = CobaltOrchestrator(port=port,
-                            db_nodes=1,
-                            batch=False,
-                            interface="ipogif0",
-                            run_command="aprun")
+def launch_orc(experiment, port):
+    """Just spin up a single node database, check the status"""
+
+    db = experiment.create_database(port=port)
 
     # generate directories for output files
     # pass in objects to make dirs for
@@ -51,25 +44,26 @@ def launch_orc(experiment, port):
 
     return db
 
+
 def create_loader(experiment):
 
-    aprun = AprunSettings(exe="python",
-                          exe_args="mnist_loader.py")
+    aprun = experiment.create_run_settings(exe="python", exe_args="mnist_loader.py")
     aprun.set_tasks(1)
     producer = experiment.create_model("loader", aprun)
 
     # create directories for the output files and copy
     # scripts to execution location inside newly created dir
     # only necessary if its not an executable (python is executable here)
-    producer.attach_generator_files(to_copy=["./mnist_loader.py", "./mnist_script.py"],
-                                    to_symlink=["./mnist"])
+    producer.attach_generator_files(
+        to_copy=["./mnist_loader.py", "./mnist_script.py"], to_symlink=["./mnist"]
+    )
     experiment.generate(producer, overwrite=True)
     return producer
 
+
 def create_trainer(experiment):
 
-    aprun = AprunSettings(exe="python",
-                          exe_args="mnist_trainer.py")
+    aprun = experiment.create_run_settings(exe="python", exe_args="mnist_trainer.py")
     aprun.set_tasks(1)
     producer = experiment.create_model("trainer", aprun)
 
@@ -80,8 +74,9 @@ def create_trainer(experiment):
     experiment.generate(producer, overwrite=True)
     return producer
 
+
 # create the experiment and specify Cobalt because Theta is a Cobalt system
-exp = Experiment("launch_mnist", launcher="cobalt")
+exp = Experiment("launch_mnist", launcher="auto")
 
 db_port = 6780
 # start the database

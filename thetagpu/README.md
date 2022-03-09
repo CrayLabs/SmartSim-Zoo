@@ -22,7 +22,7 @@ With this environment loaded, users will need to build and install both SmartSim
 SmartRedis through pip. Users are advised to build on
 compute nodes, as the service nodes do not have all needed libraries installed.
 Usually we recommend users installing or loading miniconda and
-using the pip that comes with that installation. 
+using the pip that comes with that installation.
 
 The following commands were utilized to build SmartSim on Theta,
 after the correct conda environment was loaded.
@@ -30,15 +30,15 @@ after the correct conda environment was loaded.
 ```bash
 export CC=$(which gcc)
 export CXX=$(which g++)
-conda install swig cmake git-lfs 
+conda install swig cmake git-lfs
 conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=11.0 -c pytorch -y
-pip install . tensorflow==2.4.2 numpy==1.19.5 onnx==1.7 
+pip install .[ml]
 export CUDNN_LIBRARY_DIR=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/lib
 export CUDNN_LIBRARY=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/lib
 export CUDNN_INCLUDE_DIR=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_gpu/include
 pip install smartsim
 
-smart --device cpu --onnx
+smart build --device cpu --onnx
 ```
 
 When running smartsim, the module `nvhpc-byo-compiler` will have to be loaded and
@@ -49,7 +49,7 @@ export LD_LIBRARY_PATH=/lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env_
 
 
 Alternatively, if a bleeding-edge version of SmartSim or SmartRedis is
-required, an installer script is available in this repository. It will
+required, the installer script `smartsim_thetagpu_installer.sh` is available in this repository. It will
 create a conda environment on the lustre filesystem (this can be modified): the
 environment variable `PROJECT` has to be modified according to the user's
 available project.
@@ -66,7 +66,7 @@ When utilizing OpenMPI (as opposed to  `aprun`, as on Theta) to launch the
 Orchestrator database, SmartSim needs to be informed of the nodes the user would like
 the database to be launched on.
 
-This can be automated, and code for the automation of hostname aquisition is included in
+This can be automated, and code for the automation of hostname acquisition is included in
 most of the files. This recipe can be followed for launching the Orchestrator with
 OpenMPI on Cobalt systems.
 
@@ -101,11 +101,11 @@ def collect_db_hosts(num_hosts):
 ### 1. launch_distributed_model.py
 
 Launch a distributed model with OpenMPI through SmartSim. This could represent
-a simulation or other workload that contains the SmartRedis clients and commuicates
+a simulation or other workload that contains the SmartRedis clients and communicates
 with the Orchestrator.
 
 This example runs in an interactive allocation with at least three
-nodes and 20 processors per node. 
+nodes and 20 processors per node.
 
 ```bash
 # fill in account and queue parameters
@@ -182,7 +182,7 @@ as well.
 It is important to note in this example that the database and producer are running
 a converged workflow - that is, the database and application are placed on the same
 nodes. Add a node(s) to the interactive allocation line if you wish for the data
-producer to run on a seperate node.
+producer to run on a separate node.
 
 ```bash
 # fill in account and queue parameters
@@ -207,7 +207,7 @@ the jobs to be launched.
 The higher level batch capabilities of SmartSim allow users to create many
 batch jobs of differing content without needing to write each one. As well,
 SmartSim acts as a batch process manager in Python allowing interactivity
-with the batch system to create pipelines, dependants, and conditions.
+with the batch system to create pipelines, dependents, and conditions.
 
 In this case, we create three replicas of the same model through the
 ``Experiment.create_ensemble()`` function. ``CobaltBatchSettings`` are created
@@ -232,7 +232,7 @@ python launch_ensemble_batch.py
 ### 5. launch_mnist.py
 
 Launch an orchestrator, a Loader, and a Trainer process.
-The Loader gets the MNIST dataset from disk and puts it on the DB. 
+The Loader gets the MNIST dataset from disk and puts it on the DB.
 The Trainer gets MNIST from the DB, trains a ResNet18 instance
 and puts the resulting jit-traced model on the DB. The loader
 then uploads the test set on the DB and computes the accuracy
@@ -256,4 +256,3 @@ node running
 python get_mnist.py
 ```
 from the directory containing the driver script.
-

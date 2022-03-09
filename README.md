@@ -1,31 +1,31 @@
 
 # SmartSim Example Zoo
 
-This repository contains CrayLabs and user contibuted examples of using SmartSim
+This repository contains CrayLabs and user contributed examples of using SmartSim
 for various simulation and machine learning applications.
 
 The CrayLabs team will attempt to keep examples updated with current releases
-but all user contibuted examples should specify the release they were created
+but all user contributed examples should specify the release they were created
 with.
 
 ### Contibuting Examples
 
-We welcome any and all contibutions to this repository. The CrayLabs team will
+We welcome any and all contributions to this repository. The CrayLabs team will
 do their best to review in a timely manner. We ask that, if you contribute examples,
-please include a description and all references to code and relavent previous
-implemenations or open source code that the work is based off of for the
+please include a description and all references to code and relevant previous
+implementations or open source code that the work is based off of for the
 benefit of anyone who would like to try out your example.
 
 ## Examples by Paper
 
 The following examples are implemented based on existing research papers. Each
 example lists the paper, previous works, and links to the implementation (possibly
-stored within this repository or a seperate repository)
+stored within this repository or a separate repository)
 
 
 #### 1. [DeepDriveMD](https://github.com/CrayLabs/smartsim-openmm)
 
- - Contibuting User: CrayLabs
+ - Contributing User: CrayLabs
  - Tags: OpenMM, CVAE, online inference, unsupervised online learning, PyTorch, ensemble
 
 This use case highlights many features of SmartSim and SmartRedis and
@@ -39,7 +39,7 @@ architecture. The main difference between the SmartSim implementation and
 the previous implementations, is that neither ML models, nor Molecular
 Dynamics (MD) intermediate results are stored on the file system. Additionally,
 the inference portion of the workflow takes place inside the database instead of
-a seperate task launched on the system.
+a separate task launched on the system.
 
  - [SmartSim Implementation](https://github.com/CrayLabs/smartsim-openmm)
  - [Previous Implementation](https://github.com/DeepDriveMD)
@@ -95,7 +95,7 @@ SmartSim examples with LAMMPS which is a Molecular Dynamics simulation model.
  - Contibuting User: CrayLabs
  - Tags: Molecular Dynamics, online analysis, visualizations.
 
-LAMMPS has ``dump`` styles which are custom I/O methods that can be implmentated
+LAMMPS has ``dump`` styles which are custom I/O methods that can be implemented
 by users. CrayLabs implemented a ``SMARTSIM`` dump style which uses the SmartRedis
 clients to stream data to an Orchestrator database created by SmartSim.
 
@@ -117,7 +117,7 @@ can be of benefit to new users.
 
 #### 1. Cheyenne
 
-  - Contibuting User: CrayLabs
+  - Contributing User: CrayLabs
   - [implementation](https://github.com/CrayLabs/SmartSim-Zoo/tree/master/casper) (this repo)
   - WLM: PBSPro
   - System: SGI 8600
@@ -126,7 +126,7 @@ can be of benefit to new users.
 
 #### 2. Casper
 
- - Contibuting user: @jedwards4b
+ - Contributing user: @jedwards4b
  - [Implementation](https://github.com/CrayLabs/SmartSim-Zoo/tree/master/casper) (this repo)
  - WLM: PBSPro
  - GPU: Nvidia

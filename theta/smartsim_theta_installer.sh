@@ -9,7 +9,7 @@ module load conda
 export CRAY_CPU_TARGET=x86-64
 export CRAYPE_LINK_TYPE=dynamic
 conda create --prefix /lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env python=3.8 -y
-conda activate /lus/theta-fs0/projects/$PROJECT/arigazzi/conda/envs/ss_env
+conda activate /lus/theta-fs0/projects/$PROJECT/$USER/conda/envs/ss_env
 pip install cmake
 cd /lus/theta-fs0/projects/$PROJECT/$USER
 mkdir smartsim-install
@@ -24,4 +24,4 @@ cd ..
 cd smartsim
 conda install swig cmake git-lfs -y
 pip install .[ml]
-smart --device cpu --onnx
+smart build --device cpu --onnx

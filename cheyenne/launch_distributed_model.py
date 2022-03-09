@@ -1,5 +1,4 @@
 from smartsim import Experiment
-from smartsim.settings import MpirunSettings
 
 """
 Create a simple model that runs a hello_world.c program
@@ -13,10 +12,13 @@ allocation line.
 i.e. qsub -l select=2:ncpus=20:mpiprocs=20 -l walltime=01:00:00 -A <account> -q premium -I
 """
 
-exp = Experiment("simple", launcher="pbs")
+# SmartSim will detect that cheyenne is a PBS system automatically
+exp = Experiment("simple", launcher="auto")
 
 # see https://www.craylabs.org/docs/api/smartsim_api.html#mpirunsettings
-mpirun = MpirunSettings("hello") # hello is name of executable
+mpirun = exp.create_run_settings(
+    "hello", run_command="mpirun"
+)  # hello is name of executable
 mpirun.set_tasks(40)
 
 # create a model with the settings we have defined
@@ -31,4 +33,3 @@ exp.start(hello_world, block=True, summary=True)
 
 # get the status (should be Completed because we set block=True)
 print(f"Model status: {exp.get_status(hello_world)}")
-

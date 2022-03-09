@@ -8,40 +8,33 @@ different types of workflows that are possible with SmartSim.
 
 ## Prerequisites
 
-Summit users can use both LSF (`jsrun`) or OpenMPI (`mpirun`) as launchers. In the
-tutorials, we'll show examples for both.
+Summit users can use LSF (`jsrun`) as launcher.
 
-The following modules were loaded to build the LSF examples
-
-```bash
- 1) hsi/5.0.2.p5   2) xalt/1.2.1   3) lsf-tools/2.0
- 4) darshan-runtime/3.1.7   5) DefApps   6) gcc/8.1.1
- 7) cuda/11.2.0   8) spectrum-mpi/10.3.1.2-20200121
-```
-
-The following modules were loaded to build the OpenMPI examples
+The following modules were loaded to build the examples
 
 ```bash
- 1) hsi/5.0.2.p5   2) xalt/1.2.1   3) lsf-tools/2.0 
- 4) darshan-runtime/3.1.7   5) DefApps   6) gcc/8.1.1
- 7) cuda/11.2.0   8) openmpi/4.0.3
+  1) lsf-tools/2.0                6) nsight-systems/2021.3.1.54
+  2) hsi/5.0.2.p5                 7) cuda/11.4.2
+  3) darshan-runtime/3.3.0-lite   8) gcc/9.3.0
+  4) DefApps                      9) spectrum-mpi/10.4.0.3-20210112
+  5) nsight-compute/2021.2.1
 ```
 
-Please refer to the documentation for how to build SmartSim and SmartRedis on
-Summit [here](https://www.craylabs.org/docs/installation.html)
+Please refer to `smartsim_summit_installer.sh` in this directory and the documentation
+for how to build SmartSim and SmartRedis on Summit [here](https://www.craylabs.org/docs/installation.html).
 
 ## Examples
 
-Three of the examples utilize interactive allocations, which is the preferred method of
+Two of the examples utilize interactive allocations, which is the preferred method of
 launching SmartSim.
 
 
 ----------
 
-### 1. launch_distributed_model_lsf.py and launch_distributed_model_ompi.py
+### 1. launch_distributed_model_lsf.py
 
 Launch a distributed model with OpenMPI through SmartSim. This could represent
-a simulation or other workload that contains the SmartRedis clients and commuicates
+a simulation or other workload that contains the SmartRedis clients and communicates
 with the Orchestrator.
 
 This example runs in an interactive allocation with at least 40 processors, i.e. one node
@@ -63,12 +56,6 @@ and `jsrun`
 python launch_distributed_model_lsf.py
 ```
 
-to use OpenMPI and `mpirun`
-
-```bash
-python launch_distributed_model_ompi.py
-```
-
 Instead of using an interactive allocation, SmartSim jobs can also be
 launched through batch files. This is helpful when waiting a long time
 for queued jobs.
@@ -77,16 +64,17 @@ The following gives an example of how you could launch the MPI
 model above through a batch script instead of an interactive allocation.
 
 ```bash
-#!/bin/bash
+#!/usr/bin/bash
 
-#PBS -l select=3:ncpus=20:mpiprocs=20
-#PBS -l walltime=00:10:00
-#PBS -A NCGD0048
-#PBS -q economy
-#PBS -N SmartSim
+#BSUB -W 00:10
+#BSUB -P PROJECTNAME
+#BSUB -J SmartSim
+#BSUB -nnodes 1
 
 # activate conda env if needed
-python launch_distributed_model.py
+
+# This is lsf
+python launch_distributed_model_lsf.py
 ```
 ---------
 
@@ -98,7 +86,7 @@ to provide an example of how users can interact with the database in an interact
 fashion, possibly in a medium like a jupyter notebook.
 
 This example runs in an interactive allocation with at least three
-nodes. 
+nodes.
 
 ```bash
 # fill in account and queue parameters

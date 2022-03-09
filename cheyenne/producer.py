@@ -11,7 +11,7 @@ from smartredis import Client
 client = Client(address=None, cluster=True)
 
 # put into database
-test_array = np.array([1,2,3,4])
+test_array = np.array([1, 2, 3, 4])
 print(f"Array put in database: {test_array}")
 client.put_tensor("test", test_array)
 

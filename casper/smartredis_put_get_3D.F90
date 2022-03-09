@@ -33,7 +33,7 @@ program main
   call client%put_tensor(key_prefix//"true_array_real_64", true_array_real_64, shape(true_array_real_64))
   call client%unpack_tensor(key_prefix//"true_array_real_64", recv_array_real_64, shape(recv_array_real_64))
   if (.not. all(true_array_real_64 == recv_array_real_64)) stop 'true_array_real_64: FAILED'
-  
+
   call mpi_finalize(err_code)
   if (pe_id == 0) write(*,*) "SmartRedis MPI Fortran example 3D put/get finished."
 

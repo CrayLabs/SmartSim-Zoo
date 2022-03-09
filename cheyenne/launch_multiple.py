@@ -1,8 +1,6 @@
 import os
 
 from smartsim import Experiment
-from smartsim.database import PBSOrchestrator
-from smartsim.settings import MpirunSettings
 
 
 """
@@ -16,9 +14,10 @@ allocation.
 i.e. qsub -l select=3:ncpus=2:mpiprocs:2 -l walltime=00:20:00 -A <account> -q premium -I
 """
 
+
 def collect_db_hosts(num_hosts):
     """A simple method to collect hostnames because we are using
-       openmpi. (not needed for aprun(ALPS), Slurm, etc.
+    openmpi. (not needed for aprun(ALPS), Slurm, etc.
     """
 
     hosts = []
@@ -29,7 +28,9 @@ def collect_db_hosts(num_hosts):
                 host = line.split(".")[0]
                 hosts.append(host)
     else:
-        raise Exception("could not parse interactive allocation nodes from PBS_NODEFILE")
+        raise Exception(
+            "could not parse interactive allocation nodes from PBS_NODEFILE"
+        )
 
     # account for mpiprocs causing repeats in PBS_NODEFILE
     hosts = list(set(hosts))
@@ -42,16 +43,12 @@ def collect_db_hosts(num_hosts):
 
 def launch_cluster_orc(experiment, hosts, port):
     """Just spin up a database cluster, check the status
-       and tear it down"""
+    and tear it down"""
 
     print(f"Starting Orchestrator on hosts: {hosts}")
-    # batch = False to launch on existing allocation
-    db_cluster = PBSOrchestrator(port=port,
-                                db_nodes=3,
-                                batch=False,
-                                interface="ib0",
-                                run_command="mpirun",
-                                hosts=hosts)
+    db_cluster = experiment.create_database(
+        port=port, db_nodes=3, run_command="mpirun", interface="ib0", hosts=hosts
+    )
 
     # generate directories for output files
     # pass in objects to make dirs for
@@ -66,10 +63,12 @@ def launch_cluster_orc(experiment, hosts, port):
 
     return db_cluster
 
+
 def create_producer(experiment):
 
-    mpirun = MpirunSettings(exe="python",
-                            exe_args="producer.py")
+    mpirun = experiment.create_run_settings(
+        exe="python", exe_args="producer.py", run_command="mpirun"
+    )
     mpirun.set_tasks(1)
     producer = experiment.create_model("producer", mpirun)
 
@@ -80,8 +79,10 @@ def create_producer(experiment):
     experiment.generate(producer, overwrite=True)
     return producer
 
-# create the experiment and specify PBS because cheyenne is a PBS system
-exp = Experiment("launch_multiple", launcher="pbs")
+
+# create the experiment and specify auto since SmartSim
+# will automatically detect that cheyenne is a PBS system
+exp = Experiment("launch_multiple", launcher="auto")
 
 db_port = 6780
 db_hosts = collect_db_hosts(3)
@@ -95,5 +96,3 @@ exp.start(model, block=True, summary=True)
 exp.stop(db)
 
 print(exp.summary())
-
-

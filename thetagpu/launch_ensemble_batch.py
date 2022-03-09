@@ -1,5 +1,4 @@
 from smartsim import Experiment
-from smartsim.settings import CobaltBatchSettings, MpirunSettings
 
 """
 this example launches an ensemble of MPI hello_world
@@ -18,21 +17,22 @@ batch workload
 account = "YOURACCOUNT"
 queue = "full-node"
 
-exp = Experiment("batch_ensemble", launcher="cobalt")
+exp = Experiment("batch_ensemble", launcher="auto")
 
-batch = CobaltBatchSettings(queue=queue, account=account, nodes=3, time="00:10:00")
+batch = exp.create_batch_settings(
+    queue=queue, account=account, nodes=3, time="00:10:00"
+)
 
 # define how each member of the ensemble should
 # be executed. in this case: mpirun -np 10 ./hello
-mpirun = MpirunSettings("hello")
+mpirun = exp.create_run_settings("hello", run_command="mpirun")
 mpirun.set_tasks(10)
 
 
 # create three replicas of the same model to run in a batch
-hello_world = exp.create_ensemble("hello_world_ensemble",
-                                  batch_settings=batch,
-                                  run_settings=mpirun,
-                                  replicas=3)
+hello_world = exp.create_ensemble(
+    "hello_world_ensemble", batch_settings=batch, run_settings=mpirun, replicas=3
+)
 
 # create directory for output files of this model
 exp.generate(hello_world, overwrite=True)
@@ -44,4 +44,3 @@ exp.start(hello_world, block=True, summary=True)
 print(f"Ensemble statuses: {exp.get_status(hello_world)}")
 
 print(exp.summary())
-

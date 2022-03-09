@@ -26,7 +26,7 @@ With this environment loaded, users will need to build and install both SmartSim
 SmartRedis through pip. Users are advised to build on
 compute nodes, but the whole process can be run on any node.
 Usually we recommend users installing or loading miniconda and
-using the pip that comes with that installation. 
+using the pip that comes with that installation.
 
 The following commands were utilized to build SmartSim on Theta,
 after the needed Conda environment was loaded.
@@ -38,11 +38,11 @@ export CC=$(which cc)
 export CXX=$(which CC)
 conda install swig cmake git-lfs -y
 pip install smartsim[ml]
-smart --device cpu --onnx
+smart build --device cpu --onnx
 ```
 
 Alternatively, if a bleeding-edge version of SmartSim or SmartRedis is
-required, an installer script is available in this repository. It will
+required, the installer script `smartsim_theta_installer.sh` is available in this repository. It will
 create a conda environment on the lustre filesystem (this can be modified): the
 environment variable `PROJECT` has to be modified according to the user's
 available project.
@@ -62,11 +62,12 @@ All the examples use `aprun` as a launch command. Examples for `mpirun` are avai
 ### 1. launch_distributed_model.py
 
 Launch a distributed model with `aprun` through SmartSim. This could represent
-a simulation or other workload that contains the SmartRedis clients and commuicates
+a simulation or other workload that contains the SmartRedis clients and communicates
 with the Orchestrator.
 
 This example runs in an interactive allocation with at least three
-nodes and 20 processors per node. 
+nodes and 20 processors per node. Some possible queue parameters
+include `debug-flat-quad` and `debug-cache-quad`.
 
 ```bash
 # fill in account and queue parameters
@@ -162,7 +163,7 @@ the jobs to be launched.
 The higher level batch capabilities of SmartSim allow users to create many
 batch jobs of differing content without needing to write each one. As well,
 SmartSim acts as a batch process manager in Python allowing interactivity
-with the batch system to create pipelines, dependants, and conditions.
+with the batch system to create pipelines, dependents, and conditions.
 
 In this case, we create three replicas of the same model through the
 ``Experiment.create_ensemble()`` function. ``CobaltBatchSettings`` are created
@@ -187,7 +188,7 @@ python launch_ensemble_batch.py
 ### 5. launch_mnist.py
 
 Launch an orchestrator, a Loader, and a Trainer process.
-The Loader gets the MNIST dataset from disk and puts it on the DB. 
+The Loader gets the MNIST dataset from disk and puts it on the DB.
 The Trainer gets MNIST from the DB, trains a ResNet18 instance
 and puts the resulting jit-traced model on the DB. The loader
 then uploads the test set on the DB and computes the accuracy
@@ -215,11 +216,11 @@ python get_mnist.py
 -----------
 ### 6. Online training and inference with Fortran data producer
 
-Launch an orchestrator, a parallel data producer/loader, a parallel trainer 
+Launch an orchestrator, a parallel data producer/loader, a parallel trainer
 and an inference process.
-The loader is a parallel Fortran program that emulates a PDE solver, 
-iteratively generating new training data as it marches through time steps 
-and putting the training data from each rank into the orchesrator. 
+The loader is a parallel Fortran program that emulates a PDE solver,
+iteratively generating new training data as it marches through time steps
+and putting the training data from each rank into the orchestrator.
 The trainer gets the data from the orchestrator at the creation of every new
 training batch and learns the model. In this example, a simple model for a second
 order polynomial is trained. Finally, the trained model is saved to disk as well as
@@ -231,7 +232,7 @@ This example is run by submitting a job to the queue in batch mode, running the 
 ```bash
 ./submit.sh
 ```
-from the login nodes. 
+from the login nodes.
 Alternatively, one can submit an interactive job with
 ```bash
 qsub -I -q queue -n 4 -t 30 -A charge_account

@@ -1,12 +1,10 @@
 import os
 
 from smartsim import Experiment
-from smartsim.database import CobaltOrchestrator
-from smartsim.settings import MpirunSettings
 
 
 """This driver starts an orchestrator, a loader, and a
-   trainer process. 
+   trainer process.
 
    As on Theta the compute nodes cannot (easily) download
    MNIST, the user should download it (through PyTorch)
@@ -27,12 +25,13 @@ from smartsim.settings import MpirunSettings
    Note that the inferred labels are not retrieved from the DB.
 """
 
+
 def collect_hosts(num_hosts):
     """A simple method to collect hostnames because we are using
-       openmpi. (not needed for aprun(ALPS), Slurm, etc.)
+    openmpi. (not needed for aprun(ALPS), Slurm, etc.)
 
-       We append `.mcp` to each host name, as that is the
-       name of the host attached to the high-bandwidth network.
+    We append `.mcp` to each host name, as that is the
+    name of the host attached to the high-bandwidth network.
     """
 
     hosts = []
@@ -43,7 +42,9 @@ def collect_hosts(num_hosts):
                 host = line.strip()
                 hosts.append(host + ".mcp")
     else:
-        raise Exception("could not parse interactive allocation nodes from COBALT_NODEFILE")
+        raise Exception(
+            "could not parse interactive allocation nodes from COBALT_NODEFILE"
+        )
 
     if len(hosts) >= num_hosts:
         return hosts[:num_hosts]
@@ -53,16 +54,12 @@ def collect_hosts(num_hosts):
 
 def launch_cluster_orc(experiment, host, port):
     """Just spin up a database cluster, check the status
-       and tear it down"""
+    and tear it down"""
 
     print(f"Starting Orchestrator on host: {host}")
-    # batch = False to launch on existing allocation
-    db = CobaltOrchestrator(port=port,
-                                db_nodes=1,
-                                batch=False,
-                                interface="enp226s0",
-                                run_command="mpirun",
-                                hosts=[host])
+    db = experiment.create_database(
+        port=port, interface="enp226s0", run_command="mpirun", hosts=[host]
+    )
 
     # generate directories for output files
     # pass in objects to make dirs for
@@ -77,10 +74,12 @@ def launch_cluster_orc(experiment, host, port):
 
     return db
 
+
 def create_loader(experiment, host):
 
-    mpirun = MpirunSettings(exe="python",
-                            exe_args="mnist_loader.py")
+    mpirun = experiment.create_run_settings(
+        exe="python", exe_args="mnist_loader.py", run_command="mpirun"
+    )
     mpirun.set_tasks(1)
     mpirun.set_task_map("node:PE=128")
     mpirun.set_hostlist([host])
@@ -89,17 +88,21 @@ def create_loader(experiment, host):
     # create directories for the output files and copy
     # scripts to execution location inside newly created dir
     # only necessary if its not an executable (python is executable here)
-    loader.attach_generator_files(to_copy=["./mnist_loader.py", "./mnist_script.py"],
-                                  to_symlink=["./mnist"])
+    loader.attach_generator_files(
+        to_copy=["./mnist_loader.py", "./mnist_script.py"], to_symlink=["./mnist"]
+    )
     experiment.generate(loader, overwrite=True)
     return loader
 
 
 def create_trainer(experiment, host):
 
-    mpirun = MpirunSettings(exe="python",
-                            exe_args="mnist_trainer.py",
-                            env_vars={"PYTHONUNBUFFERED": "1"})
+    mpirun = experiment.create_run_settings(
+        exe="python",
+        exe_args="mnist_trainer.py",
+        env_vars={"PYTHONUNBUFFERED": "1"},
+        run_command="mpirun",
+    )
     mpirun.set_tasks(1)
     mpirun.set_task_map("node:PE=128")
     mpirun.set_hostlist([host])
@@ -112,8 +115,10 @@ def create_trainer(experiment, host):
     experiment.generate(trainer, overwrite=True)
     return trainer
 
-# create the experiment and specify Cobalt because ThetaGPU is a Cobalt system
-exp = Experiment("launch_mnist", launcher="cobalt")
+
+# create the experiment and specify auto because SmartSim
+# will automatically detect that ThetaGPU is a Cobalt system
+exp = Experiment("launch_mnist", launcher="auto")
 
 db_port = 6780
 hosts = collect_hosts(3)
@@ -130,5 +135,3 @@ exp.start(loader_model, block=True, summary=False)
 exp.stop(db)
 
 print(exp.summary())
-
-

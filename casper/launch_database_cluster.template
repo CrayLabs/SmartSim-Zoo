@@ -15,15 +15,12 @@ import os, sys, time
 _LIBDIR = $python_sys_path
 sys.path.extend(_LIBDIR)
 
-import socket, subprocess
-import numpy as np
 from utils import run_cmd
-from smartsim import Experiment, constants
-from smartsim.database import PBSOrchestrator
+from smartsim import Experiment
 
 """
 Launch a distributed, in memory database cluster and use the
-SmartRedis python client to send and recieve some numpy arrays.
+SmartRedis python client to send and receive some numpy arrays.
 
 i.e. qsub -l select=3:ncpus=1 -l walltime=00:10:00 -A <account> -q premium -I
 """
@@ -48,7 +45,7 @@ def collect_db_hosts(num_hosts):
     if len(hosts) >= num_hosts:
         return hosts[:num_hosts]
     else:
-        raise Exception("PBS_NODEFILE {} had {} hosts, not {}".format(node_file, len(hosts),num_hosts))
+        raise Exception("PBS_NODEFILE {} had {} hosts, not {}".format(node_file, len(hosts), num_hosts))
 
 
 def launch_cluster_orc(exp, db_hosts, port):
@@ -56,9 +53,7 @@ def launch_cluster_orc(exp, db_hosts, port):
        and tear it down"""
 
     print(f"Starting Orchestrator on hosts: {db_hosts}")
-    # batch = False to launch on existing allocation
-    db = PBSOrchestrator(port=port, db_nodes=len(db_hosts), batch=False,
-                          run_command="mpirun", hosts=db_hosts)
+    db = exp.create_database(port=port, db_nodes=len(db_hosts),  run_command="mpirun", hosts=db_hosts)
 
     # generate directories for output files
     # pass in objects to make dirs for
@@ -76,7 +71,7 @@ def launch_cluster_orc(exp, db_hosts, port):
 def monitor_client_jobs(rsvname):
     jobs_done=False
     while not jobs_done:
-        s, o, e = run_cmd("qstat -q {}".format(rsvname), verbose=True) 
+        s, o, e = run_cmd("qstat -q {}".format(rsvname), verbose=True)
         jobs_left = o.split()[-2:]
         print("Jobs left: Running {} Queued {}".format(int(jobs_left[0]),int(jobs_left[1])))
         if int(jobs_left[0]) + int(jobs_left[1]) == 1:
@@ -87,9 +82,9 @@ def monitor_client_jobs(rsvname):
 
 
 
-
-# create the experiment and specify PBS because cheyenne is a PBS system
-exp = Experiment("launch_cluster_db", launcher="pbs")
+# create the experiment and specify "auto" for launcher and
+# SmartSim will detect that cheyenne is a PBS system
+exp = Experiment("launch_cluster_db", launcher="auto")
 
 db_port = $db_port
 db_hosts = collect_db_hosts($db_nodes)

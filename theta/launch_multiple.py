@@ -1,18 +1,12 @@
 from smartsim import Experiment
-from smartsim.database import CobaltOrchestrator
-from smartsim.settings import AprunSettings
 
 
 def launch_cluster_orc(experiment, port):
     """Just spin up a database cluster, check the status
-       and tear it down"""
+    and tear it down"""
 
     # batch = False to launch on existing allocation
-    db_cluster = CobaltOrchestrator(port=port,
-                                db_nodes=3,
-                                batch=False,
-                                interface="ipogif0",
-                                run_command="aprun")
+    db_cluster = experiment.create_database(port=port, db_nodes=3)
 
     # generate directories for output files
     # pass in objects to make dirs for
@@ -27,10 +21,10 @@ def launch_cluster_orc(experiment, port):
 
     return db_cluster
 
+
 def create_producer(experiment):
 
-    aprun = AprunSettings(exe="python",
-                          exe_args="producer.py")
+    aprun = experiment.create_run_settings(exe="python", exe_args="producer.py")
     aprun.set_tasks(1)
     producer = experiment.create_model("producer", aprun)
 
@@ -41,8 +35,9 @@ def create_producer(experiment):
     experiment.generate(producer, overwrite=True)
     return producer
 
+
 # create the experiment and specify Cobalt because Theta is a Cobalt system
-exp = Experiment("launch_multiple", launcher="cobalt")
+exp = Experiment("launch_multiple", launcher="auto")
 
 db_port = 6780
 # start the database

@@ -18,7 +18,7 @@ ncar_pylib -c 20201220 /glade/work/$USER/casper_npl_clone
 
 ``pip install smartsim``
 
-``smart --device gpu``
+``smart build --device gpu``
 
 ``pip install smartredis``
 
@@ -54,9 +54,9 @@ It creates pbs jobs from each of the 3 templates
 
 and submits the resv_job.sh which in turn will create a reservation large enough for the db and all the ensemble members.
 It submits those jobs in the newly created reservation.  It starts the database and sets the SSDB environment variable
-then launchs each of the clients, all of this is done within the newly created reservation.   The database job monitors progress of the clients and exits and removes the reservation when it is complete.
+then launches each of the clients, all of this is done within the newly created reservation. The database job monitors progress of the clients and exits and removes the reservation when it is complete.
 
-Note that this launches the database and client jobs separately - The prefered method is to launch the client through SmartSim. 
+Note that this launches the database and client jobs separately - The preferred method is to launch the client through SmartSim
 
 ** Currently to use this feature you must first send a note to cislhelp@ucar.edu and ask for permission to use the
 create_resv_from_job feature of PBS.  **

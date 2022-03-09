@@ -7,13 +7,12 @@ from time import sleep
 from time import time
 
 from torchvision.models import resnet18
-from torchvision.transforms.functional import to_tensor
 
 import io
 
-"""This is the trainer code for the `launch_mnist.py` example. It 
+"""This is the trainer code for the `launch_mnist.py` example. It
    it is launched through SmartSim, and the Orchestrator is up and
-   running. 
+   running.
 """
 
 # Taken from https://github.com/marrrcin/pytorch-resnet-mnist/blob/master/pytorch-resnet-mnist.ipynb
@@ -21,7 +20,9 @@ class ResNetMNIST(nn.Module):
     def __init__(self):
         super().__init__()
         self.model = resnet18(num_classes=10)
-        self.model.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
+        self.model.conv1 = nn.Conv2d(
+            1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False
+        )
         self.loss = nn.CrossEntropyLoss()
 
     def forward(self, x):
@@ -29,7 +30,7 @@ class ResNetMNIST(nn.Module):
 
 
 model = ResNetMNIST()
-client = Client(None, False)
+client = Client(address=None, cluster=False)
 
 while not client.dataset_exists("MNIST_train"):
     print("Waiting for batches to be available")
@@ -62,12 +63,14 @@ for epoch in range(1):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        acc = torch.mean((torch.argmax(y_pred, dim=1)==targets).float()).numpy()*100
+        acc = torch.mean((torch.argmax(y_pred, dim=1) == targets).float()).numpy() * 100
         end_time = time()
-        print(f"batch {t+1}/{len(torch_dl)}",
-              f"Loss: {loss.item()}",
-              f"Batch time: {end_time-start_time} seconds", 
-              f"Accuracy: {acc}%")
+        print(
+            f"batch {t+1}/{len(torch_dl)}",
+            f"Loss: {loss.item()}",
+            f"Batch time: {end_time-start_time} seconds",
+            f"Accuracy: {acc}%",
+        )
         start_time = time()
 
 compiled_model = torch.jit.script(model)

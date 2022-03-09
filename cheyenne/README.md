@@ -1,7 +1,7 @@
 
 # Cheyenne Tutorials
 
-Cheyenne is the supercomputer at the National Center for Atmopheric Research. The
+Cheyenne is the supercomputer at the National Center for Atmospheric Research (NCAR). The
 following tutorials are meant to aide users on Cheyenne with getting used to the
 different types of workflows that are possible with SmartSim.
 
@@ -24,7 +24,7 @@ using the pip that comes with that installation.
 
  1. Activate a Python environment
  2. ``pip install smartsim``
- 3. ``smart --device cpu``  (May take a couple minutes)
+ 3. ``smart build --device cpu``  (May take a couple minutes)
 
 If you run into trouble with the installation, please consult the installation
 documentation [here](https://www.craylabs.org/docs/installation.html)
@@ -38,7 +38,7 @@ When utilizing OpenMPI (as opposed to other run commands like ``srun``) to launc
 Orchestrator database, SmartSim needs to be informed of the nodes the user would like
 the database to be launched on.
 
-This can be automated, and code for the automation of hostname aquisition is included in
+This can be automated, and code for the automation of hostname acquisition is included in
 most of the files. This recipe can be followed for launching the Orchestrator with
 OpenMPI on PBS systems.
 
@@ -73,11 +73,11 @@ def collect_db_hosts(num_hosts):
 ### 1. launch_distributed_model.py
 
 Launch a distributed model with OpenMPI through SmartSim. This could represent
-a simulation or other workload that contains the SmartRedis clients and commuicates
+a simulation or other workload that contains the SmartRedis clients and communicates
 with the Orchestrator.
 
 This example runs in an interactive allocation with at least three
-nodes and 20 processors per node. be sure to include mpiprocs in your
+nodes and 20 processors per node. Be sure to include mpiprocs in your
 allocation.
 
 ```bash
@@ -130,7 +130,7 @@ to provide an example of how users can interact with the database in an interact
 fashion, possibly in a medium like a jupyter notebook.
 
 This example runs in an interactive allocation with at least three
-nodes and 2 processors per node. be sure to include mpiprocs in your
+nodes and 2 processors per node. Be sure to include mpiprocs in your
 allocation.
 
 ```bash
@@ -159,7 +159,7 @@ as well.
 It is important to note in this example that the database and producer are running
 a converged workflow - that is, the database and application are placed on the same
 nodes. Add a node(s) to the interactive allocation line if you wish for the data
-producer to run on a seperate node.
+producer to run on a separate node.
 
 ```bash
 # fill in account and queue parameters
@@ -177,14 +177,14 @@ python launch_multiple.py
 -----------
 ### 4. launch_ensemble_batch.py
 
-Launch a ensemble of hello world models in a batch created by SmartSim. This
-file can be launched on a head node and will create a batch file for the all
+Launch an ensemble of hello world models in a batch created by SmartSim. This
+file can be launched on a head node and will create a batch file for all
 the jobs to be launched.
 
 The higher level batch capabilities of SmartSim allow users to create many
 batch jobs of differing content without needing to write each one. As well,
 SmartSim acts as a batch process manager in Python allowing interactivity
-with the batch system to create pipelines, dependants, and conditions.
+with the batch system to create pipelines, dependents, and conditions.
 
 In this case, we create three replicas of the same model through the
 ``Experiment.create_ensemble()`` function. ``QsubBatchSettings`` are created
