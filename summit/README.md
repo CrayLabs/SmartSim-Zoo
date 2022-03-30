@@ -14,7 +14,7 @@ The following modules were loaded to build the examples
 
 ```bash
   1) lsf-tools/2.0                6) nsight-systems/2021.3.1.54
-  2) hsi/5.0.2.p5                 7) cuda/11.4.2
+  2) hsi/5.0.2.p5                 7) cuda/11.0.3
   3) darshan-runtime/3.3.0-lite   8) gcc/9.3.0
   4) DefApps                      9) spectrum-mpi/10.4.0.3-20210112
   5) nsight-compute/2021.2.1
@@ -22,6 +22,10 @@ The following modules were loaded to build the examples
 
 Please refer to `smartsim_summit_installer.sh` in this directory and the documentation
 for how to build SmartSim and SmartRedis on Summit [here](https://www.craylabs.org/docs/installation.html).
+
+Notice that PyTorch needs a newer GCC version, but only at runtime. Therefore,
+when running a PyTorch use case, the build instructions do not change, but 
+the module `gcc/11.4.2` has to be loaded before execution.
 
 ## Examples
 
