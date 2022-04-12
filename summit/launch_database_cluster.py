@@ -24,8 +24,8 @@ def launch_cluster_orc(experiment, port):
         port=port,
         db_nodes=3,
         interface="ib0",
-        cpus_per_shard=21,
-        gpus_per_shard=3,
+        cpus_per_shard=42,
+        gpus_per_shard=6,
     )
 
     # generate directories for output files
